@@ -1,0 +1,9 @@
+.image-viewer {
+  width: 100%;
+  height: 100%;
+
+  // Hide default controls
+  .openseadragon-container > div:not(.openseadragon-canvas) {
+    display: none !important;
+  }
+}
