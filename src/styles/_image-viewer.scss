@@ -1,9 +1,22 @@
 .image-viewer {
+  position: relative;
   width: 100%;
   height: 100%;
+  background: $map-background-color;
+
+  .openseadragon-wrapper {
+    position: absolute;
+    inset: 0;
+  }
 
   // Hide default controls
   .openseadragon-container > div:not(.openseadragon-canvas) {
     display: none !important;
+  }
+
+  .navigation {
+    position: absolute;
+    bottom: 0;
+    left: 0;
   }
 }

@@ -1,11 +1,14 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
+import { RouterProvider } from "react-router-dom";
 
-import ImageViewer from "./ImageViewer.tsx";
+import { getRouter } from "../core/router.tsx";
 
 const Root: FC = () => {
+  const router = useMemo(() => getRouter(), []);
+
   return (
     <>
-      <ImageViewer tileSources={"/map/map.dzi"} />
+      <RouterProvider router={router} />
     </>
   );
 };

@@ -13,8 +13,7 @@ The easiest way to generate the [DZI tileset](<https://learn.microsoft.com/en-us
 
 1. [Install libvips](https://www.libvips.org/install.html)
 2. Open the project: `cd path/to/grounding-ai-map`
-3. Copy the global image to base the tileset in the project: `cp path/to/image.jpg resources/map.jpg`
-4. Generate the tileset: `vips dzsave resources/map.jpg public/map/map`
+3. Generate the tileset: `vips dzsave path/to/image.jpg public/map/map`
 
 If your input image file is indeed named `resources/map.jpg`, you can also simply run `npm run make-tiles`, that will first clean existing tiles, and then run the `vips dzsave` command.
 
