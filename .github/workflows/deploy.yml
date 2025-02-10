@@ -57,6 +57,9 @@ jobs:
         if: steps.tiles-cache.outputs.cache-hit != 'true'
         run: npm run make-tiles
 
+      - name: Generate JSON summaries
+        run: npm run make-summaries
+
       - name: Build project
         run: npm run build
 
