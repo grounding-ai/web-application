@@ -61,9 +61,10 @@ jobs:
         run: npm run build
 
       - name: Deploy to GitHub Pages
-        uses: actions/upload-pages-artifact@v2
+        uses: crazy-max/ghaction-github-pages@v4
         with:
-          path: dist
-
-      - name: Deploy
-        uses: actions/deploy-pages@v2
+          target_branch: gh-pages
+          build_dir: dist
+          jekyll: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
