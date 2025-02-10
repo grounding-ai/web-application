@@ -1,0 +1,69 @@
+name: Build & Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to push to GitHub Pages
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          lfs: false
+
+      - name: Install Git LFS
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git-lfs
+          git lfs install
+
+      - name: Restore cached Git LFS file (resources/map.jpg)
+        id: lfs-cache
+        uses: actions/cache@v3
+        with:
+          path: resources/map.jpg
+          key: ${{ runner.os }}-lfs-map-${{ hashFiles('resources/map.jpg') }}
+
+      - name: Fetch Git LFS files if cache not restored
+        if: steps.lfs-cache.outputs.cache-hit != 'true'
+        run: git lfs pull
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22"
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Install libvips
+        run: sudo apt-get update && sudo apt-get install -y libvips-tools
+
+      - name: Restore cached map tiles
+        id: tiles-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            public/map/map.dzi
+            public/map/map_files
+          key: ${{ runner.os }}-map-tiles-${{ hashFiles('resources/map.jpg') }}
+
+      - name: Generate map tiles
+        if: steps.tiles-cache.outputs.cache-hit != 'true'
+        run: npm run make-tiles
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: dist
+
+      - name: Deploy
+        uses: actions/deploy-pages@v2
