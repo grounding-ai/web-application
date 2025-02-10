@@ -24,7 +24,5 @@ dist-ssr
 *.sw?
 
 # Large files
-resources/*
-!resources/.gitkeep
 public/map/*
 !public/map/.gitkeep
