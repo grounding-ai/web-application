@@ -16,7 +16,6 @@ Before anything else, you need to properly clone the project (including large fi
 2. Open the project: `cd grounding-ai-map`
 3. Download the large base map file through [Git LFS](https://git-lfs.com/): `git lfs pull`
 4. Install Node.js dependencies: `npm install`
-5. Generate the tileset and summary JSON files: `npm run prepare`
 
 At this point:
 

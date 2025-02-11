@@ -1,8 +1,10 @@
 import { Options, Viewer } from "openseadragon";
 import { FC, useEffect, useRef } from "react";
-import { FaHome } from "react-icons/fa";
+import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 
-const ImageViewer: FC<{ id?: string; tileSources: Options["tileSources"] }> = ({
+const ZOOM_BUTTON_INCR = 1.4;
+
+export const ImageViewer: FC<{ id?: string; tileSources: Options["tileSources"] }> = ({
   id = "seadragon-viewer",
   tileSources,
 }) => {
@@ -28,13 +30,20 @@ const ImageViewer: FC<{ id?: string; tileSources: Options["tileSources"] }> = ({
     <div className="image-viewer">
       <div id={id} className="openseadragon-wrapper" />
 
-      <div className="navigation p-3">
-        <a href="#/" className="btn btn-outline-dark bg-white rounded-pill">
-          <FaHome />
-        </a>
+      <div className="navigation p-3 d-flex flex-column">
+        <button
+          className="btn btn-primary border-white mb-1"
+          onClick={() => viewerRef.current?.viewport.zoomBy(ZOOM_BUTTON_INCR)}
+        >
+          <AiOutlinePlus />
+        </button>
+        <button
+          className="btn btn-primary border-white"
+          onClick={() => viewerRef.current?.viewport.zoomBy(1 / ZOOM_BUTTON_INCR)}
+        >
+          <AiOutlineMinus />
+        </button>
       </div>
     </div>
   );
 };
-
-export default ImageViewer;

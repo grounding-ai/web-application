@@ -1,26 +1,38 @@
 import { createHashRouter } from "react-router-dom";
 
-import { FreeExploration } from "../components/FreeExploration.tsx";
-import { HomePage } from "../components/HomePage.tsx";
-import ImageViewer from "../components/ImageViewer.tsx";
 import { Error } from "../components/error";
+import { About } from "../pages/About.tsx";
+import { HomePage } from "../pages/HomePage.tsx";
+import { Map } from "../pages/Map.tsx";
+import { Root, rootLoader } from "../pages/Root.tsx";
+import { TopicPage, topicPageLoader } from "../pages/TopicPage.tsx";
 
 export function getRouter() {
   return createHashRouter([
     {
       path: "/",
       errorElement: <Error />,
-      element: <HomePage />,
-    },
-    {
-      path: "/explore",
-      errorElement: <Error />,
-      element: <FreeExploration />,
-    },
-    {
-      path: "/map",
-      errorElement: <Error />,
-      element: <ImageViewer tileSources="/map/map.dzi" />,
+      element: <Root />,
+      loader: rootLoader,
+      children: [
+        {
+          path: "/",
+          element: <HomePage />,
+        },
+        {
+          path: "/map",
+          element: <Map />,
+        },
+        {
+          path: "/about",
+          element: <About />,
+        },
+        {
+          path: "/topic/:topicID",
+          loader: topicPageLoader,
+          element: <TopicPage />,
+        },
+      ],
     },
   ]);
 }

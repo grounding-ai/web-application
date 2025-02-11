@@ -57,6 +57,12 @@ jobs:
         if: steps.tiles-cache.outputs.cache-hit != 'true'
         run: npm run make-tiles
 
+      - name: Generate map thumbnail
+        run: npm run make-thumbnail
+
+      - name: Generate map dimensions
+        run: npm run make-map-dimensions
+
       - name: Generate JSON summaries
         run: npm run make-summaries
 

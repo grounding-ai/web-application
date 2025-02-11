@@ -1,12 +1,23 @@
 $font-family-sans-serif: "IBM Plex Sans";
 $font-family-monospace: "IBM Plex Mono";
 
-$input-btn-font-family: $font-family-monospace;
-$headings-font-weight: bold;
+$headings-font-weight: 500;
+$display-font-weight: 500;
 
-$primary: #3d3853;
-$secondary: #d4d1e1;
-$background-color: #edf1ec;
-$map-background-color: #627289;
+$primary: #313a44;
+$secondary: #596778;
 
 $body-color: $primary;
+$background-color: #edf1ec;
+$map-background-color: #627186;
+$light-blue: #eef5f4;
+
+$custom-colors: (
+  "light-blue": $light-blue,
+);
+
+$font-size-root: 14px;
+$border-radius: 8px;
+$input-bg: transparent;
+$form-label-font-size: 14px;
+$form-select-indicator-color: white;

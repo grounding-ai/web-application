@@ -23,7 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 
-# Large files
+# Large files (and their derived files)
+public/map.jpg
 public/map/*
 !public/map/.gitkeep
 public/summaries/*
+src/map-dimensions.json

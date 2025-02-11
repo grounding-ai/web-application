@@ -9,12 +9,16 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "make-tiles": "rimraf public/map/map.dzi public/map/map_files && vips dzsave resources/map.jpg public/map/map",
+    "make-thumbnail": "rimraf public/map.jpg && vips thumbnail resources/map.jpg public/map.jpg 400",
     "make-summaries": "rimraf public/summaries && tsx bin/build-json-summaries.ts",
-    "prepare": "npm run make-tiles && npm run make-summaries"
+    "make-map-dimensions": "rimraf src/map-dimensions.json && echo \"{ \\\"width\\\": $(vips im_header_int width resources/map.jpg), \\\"height\\\": $(vips im_header_int height resources/map.jpg) }\" > src/map-dimensions.json",
+    "prepare": "npm run make-tiles && npm run make-thumbnail && npm run make-map-dimensions && npm run make-summaries"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
+    "classnames": "^2.5.1",
     "lodash": "^4.17.21",
+    "minisearch": "^7.1.1",
     "openseadragon": "^5.0.1",
     "papaparse": "^5.5.2",
     "react": "^18.3.1",
@@ -22,7 +26,8 @@
     "react-icons": "^5.4.0",
     "react-router": "^6.26.1",
     "react-router-dom": "^6.26.1",
-    "react-router-typesafe": "^1.5.0"
+    "react-router-typesafe": "^1.5.0",
+    "react-select": "^5.10.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

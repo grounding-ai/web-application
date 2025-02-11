@@ -3,7 +3,11 @@ body {
   margin: 0;
   width: 100vw;
   height: 100vh;
-  background: $background-color;
+  background-color: $map-background-color;
+  background-image: url("/background.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 #root {
