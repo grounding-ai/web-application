@@ -35,7 +35,12 @@ export const MapThumbnail: FC<{ points?: Point[]; className?: string }> = ({ poi
 
   return (
     <div className={cx("position-relative", className)}>
-      <img src="/map.jpg" alt="The map with all topics" className="w-100" style={{ aspectRatio }} />
+      <img
+        src={`${import.meta.env.BASE_URL}/map.jpg`}
+        alt="The map with all topics"
+        className="w-100"
+        style={{ aspectRatio }}
+      />
       <svg className="points position-absolute inset-0 w-100 h-100">
         {points?.map((point) => {
           const { x, y, size, color } = { ...DEFAULTS, ...point };

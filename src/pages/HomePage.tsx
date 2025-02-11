@@ -6,7 +6,7 @@ export const HomePage: FC = () => {
   return (
     <main className="p-3 pt-5 d-flex flex-column justify-content-between">
       <section>
-        <LanguageSelect className="border-primary w-auto" />
+        <LanguageSelect className="text-primary w-auto" selectClassName="border-primary" />
         <h1 className="display-1 mt-5">Grounding AI</h1>
         <p className="display-6 fw-normal">Exploring algorithms’ roles in science literature.</p>
       </section>

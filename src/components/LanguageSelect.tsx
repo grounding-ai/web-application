@@ -1,5 +1,6 @@
-import { FC } from "react";
 import cx from "classnames";
+import { FC } from "react";
+import { FaAngleDown } from "react-icons/fa6";
 
 import { useAppContext } from "../core/context";
 import { Language } from "../core/types";
@@ -10,21 +11,30 @@ const OPTIONS: LanguageOption[] = [
   { value: "da", label: "Dansk" },
 ];
 
-const LanguageSelect: FC<{ className?: string | null }> = ({className}) => {
+const LanguageSelect: FC<{ className?: string | null; selectClassName?: string | null }> = ({
+  className,
+  selectClassName,
+}) => {
   const { language, setLanguage } = useAppContext();
 
   return (
-    <select
-      className={cx("form-select", className)}
-      value={language}
-      onChange={(e) => setLanguage(e.target.value as Language)}
-    >
-      {OPTIONS.map(({ value, label }) => (
-        <option value={value} selected={value === language}>
-          {label.toUpperCase()}
-        </option>
-      ))}
-    </select>
+    <div className={cx("position-relative d-inline-block", className)}>
+      <select
+        className={cx("form-select z-1 position-relative", selectClassName)}
+        value={language}
+        onChange={(e) => setLanguage(e.target.value as Language)}
+      >
+        {OPTIONS.map(({ value, label }) => (
+          <option value={value} selected={value === language}>
+            {label.toUpperCase()}
+          </option>
+        ))}
+      </select>
+
+      <div className="position-absolute h-100 top-0 end-0 pe-2 d-flex align-items-center justify-content-center">
+        <FaAngleDown />
+      </div>
+    </div>
   );
 };
 

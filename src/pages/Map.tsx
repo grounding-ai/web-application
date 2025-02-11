@@ -16,7 +16,7 @@ export const Map: FC = () => {
       </TopMenu>
 
       <section className="flex-grow-1 position-relative">
-        <ImageViewer tileSources="/map/map.dzi" />
+        <ImageViewer tileSources={`${import.meta.env.BASE_URL}/map/map.dzi`} />
         {search && (
           <div className="position-absolute inset-0 bg-secondary p-4 overflow-auto pt-5">
             <SearchResults {...search} />

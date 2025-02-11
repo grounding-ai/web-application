@@ -13,7 +13,10 @@ export const TopMenu: FC<PropsWithChildren<{ className?: string }>> = ({ childre
         {children}
         {isMenuOpen && (
           <div className="bg-secondary position-absolute inset-0">
-            <LanguageSelect className="border-white text-white w-auto me-1 d-inline-block align-baseline" />
+            <LanguageSelect
+              className="w-auto me-1 d-inline-block align-baseline"
+              selectClassName="border-white text-white"
+            />
             <a
               href="#/about"
               className="btn btn-outline-light d-inline-block align-baseline font-monospace text-uppercase"

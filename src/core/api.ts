@@ -5,7 +5,7 @@ import { Topic, TopicContent } from "./types";
 type CSVRowKey = "id" | "label" | "number" | "X" | "Y" | "local_density";
 type CSVRow = Record<CSVRowKey, string>;
 export async function loadTopics(): Promise<Topic[]> {
-  const res = await fetch("/labels.csv");
+  const res = await fetch(`${import.meta.env.BASE_URL}/labels.csv`);
   const csv = await res.text();
   const { data } = parse<CSVRow>(csv, {
     header: true,
@@ -21,6 +21,6 @@ export async function loadTopics(): Promise<Topic[]> {
 }
 
 export async function loadTopicContent(id: string): Promise<TopicContent> {
-  const res = await fetch(`/summaries/${id}.json`);
+  const res = await fetch(`${import.meta.env.BASE_URL}/summaries/${id}.json`);
   return (await res.json()) as TopicContent;
 }
