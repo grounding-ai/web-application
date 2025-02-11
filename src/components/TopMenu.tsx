@@ -1,10 +1,14 @@
 import cx from "classnames";
 import { FC, PropsWithChildren, useState } from "react";
+import { AiOutlineHome } from "react-icons/ai";
 import { FaBars, FaTimes } from "react-icons/fa";
 
+import { useAppContext } from "../core/context.ts";
+import { translate } from "../utils/translation.ts";
 import LanguageSelect from "./LanguageSelect.tsx";
 
 export const TopMenu: FC<PropsWithChildren<{ className?: string }>> = ({ children, className }) => {
+  const { language } = useAppContext();
   const [isMenuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -19,9 +23,18 @@ export const TopMenu: FC<PropsWithChildren<{ className?: string }>> = ({ childre
             />
             <a
               href="#/about"
-              className="btn btn-outline-light d-inline-block align-baseline font-monospace text-uppercase"
+              className="btn btn-outline-light d-inline-block align-baseline font-monospace text-uppercase me-1"
             >
-              About
+              {translate(
+                {
+                  en: "About",
+                  da: "Om",
+                },
+                language,
+              )}
+            </a>
+            <a href="#/" className="btn btn-outline-light d-inline-block align-baseline font-monospace text-uppercase">
+              <AiOutlineHome />
             </a>
           </div>
         )}
