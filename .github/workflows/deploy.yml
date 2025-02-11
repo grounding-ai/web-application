@@ -22,6 +22,9 @@ jobs:
           sudo apt-get install -y git-lfs
           git lfs install
 
+      - name: Install libvips
+        run: sudo apt-get update && sudo apt-get install -y libvips-tools
+
       - name: Restore cached Git LFS file (resources/map.jpg)
         id: lfs-cache
         uses: actions/cache@v3
@@ -40,9 +43,6 @@ jobs:
 
       - name: Install Node dependencies
         run: npm ci
-
-      - name: Install libvips
-        run: sudo apt-get update && sudo apt-get install -y libvips-tools
 
       - name: Restore cached map tiles
         id: tiles-cache
