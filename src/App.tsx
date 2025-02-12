@@ -6,9 +6,5 @@ import { getRouter } from "./core/router";
 export const App: FC = () => {
   const router = useMemo(() => getRouter(), []);
 
-  return (
-    <>
-      <RouterProvider router={router} />
-    </>
-  );
+  return <RouterProvider router={router} />;
 };
