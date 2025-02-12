@@ -1,3 +1,4 @@
+import cx from "classnames";
 import MiniSearch from "minisearch";
 import { FC, useCallback, useMemo, useState } from "react";
 import { AiOutlineClose, AiOutlineSearch } from "react-icons/ai";
@@ -6,9 +7,10 @@ import { useAppContext } from "../core/context.ts";
 import { Topic } from "../core/types.ts";
 import { translate } from "../utils/translation.ts";
 
-export const SearchField: FC<{ onSearch: (res: { query: string; results: Topic[] } | null) => void }> = ({
-  onSearch,
-}) => {
+export const SearchField: FC<{
+  onSearch: (res: { query: string; results: Topic[] } | null) => void;
+  inputClassName?: string;
+}> = ({ onSearch, inputClassName }) => {
   const { topics, topicsDict, language } = useAppContext();
   const [query, setQuery] = useState("");
   const miniSearch = useMemo(() => {
@@ -57,7 +59,7 @@ export const SearchField: FC<{ onSearch: (res: { query: string; results: Topic[]
       <div className="input-group">
         <input
           type="string"
-          className="form-control bg-light-blue"
+          className={cx("form-control bg-light-blue", inputClassName)}
           id="topics-search"
           placeholder="Eg: 1640, Food"
           value={query}
@@ -75,7 +77,7 @@ export const SearchField: FC<{ onSearch: (res: { query: string; results: Topic[]
             <AiOutlineClose />
           </button>
         )}
-        <button className="btn btn-light px-2" type="submit">
+        <button className={cx("btn btn-light px-2", inputClassName)} type="submit">
           <AiOutlineSearch />
         </button>
       </div>

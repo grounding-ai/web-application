@@ -26,6 +26,7 @@ export const Map: FC = () => {
 
       <section className="p-3 pb-4">
         <SearchField
+          inputClassName="bg-light-blue border-light-blue"
           onSearch={(s) => {
             setSearch(s);
           }}

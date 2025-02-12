@@ -47,18 +47,39 @@ export const TopicPage: FC = () => {
 
         <h1 className="fw-bolder mb-3">{translate(topic.headline, language)}</h1>
 
-        <MapThumbnail className="w-100 mb-3" points={[{ x, y, color: "red" }]} />
+        <MapThumbnail className="w-100 mb-3" points={[{ x, y }]} />
 
-        <p className="content">{translate(topic.content, language)}</p>
+        <p className="content mb-5">{translate(topic.content, language)}</p>
 
-        <hr />
+        <hr className="border-1 border-white opacity-100" />
 
-        <h2>Get some synthetic opinions on this topic</h2>
+        <h2 className="fw-bolder">Get some synthetic opinions on this topic</h2>
 
-        <p>TODO</p>
+        <section className="d-flex flex-row justify-content-between my-4">
+          <a
+            href={`#/topic/${topic.id}/bot/critic`}
+            className="border-0 bg-light-blue text-primary rounded me-3 text-decoration-none"
+          >
+            <div className="text-uppercase font-monospace text-center fw-bolder m-2">The skeptic bot</div>
+            <img
+              src={`${import.meta.env.BASE_URL}/bot.png`}
+              alt="The skeptic bot"
+              className="img-fluid w-100"
+              style={{ transform: "scale(-1,1)" }}
+            />
+          </a>
+          <a
+            href={`#/topic/${topic.id}/bot/potential`}
+            className="border-0 bg-primary text-light-blue rounded text-decoration-none"
+          >
+            <div className="text-uppercase font-monospace text-center fw-bolder m-2">The advocate bot</div>
+            <img src={`${import.meta.env.BASE_URL}/bot.png`} alt="The advocate bot" className="img-fluid w-100" />
+          </a>
+        </section>
 
-        <div className="pb-2 font-monospace">
+        <div className="mb-2 font-monospace mt-5">
           <SearchField
+            inputClassName="bg-light-blue border-light-blue"
             onSearch={(s) => {
               setSearch(s);
             }}
