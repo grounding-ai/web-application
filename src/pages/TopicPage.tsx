@@ -22,7 +22,7 @@ export const TopicPage: FC = () => {
   const [search, setSearch] = useState<null | { query: string; results: Topic[] }>(null);
   const { topic } = useLoaderData<typeof topicPageLoader>();
   const { language, topicsDict } = useAppContext();
-  const { x, y } = topicsDict[topic.id];
+  const topicPoint = topicsDict[topic.id];
 
   useEffect(() => {
     window.scrollTo({
@@ -47,7 +47,7 @@ export const TopicPage: FC = () => {
 
         <h1 className="fw-bolder mb-3">{translate(topic.headline, language)}</h1>
 
-        <MapThumbnail className="w-100 mb-3" points={[{ x, y }]} />
+        <MapThumbnail className="w-100 mb-3" points={[topicPoint]} />
 
         <p className="content mb-5">{translate(topic.content, language)}</p>
 

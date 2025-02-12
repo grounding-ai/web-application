@@ -20,3 +20,8 @@ export type TopicContent = {
   content: Translation;
   bots: Record<Bot, Translation>;
 };
+
+export const POINT_DEFAULTS = {
+  size: 19,
+  color: "#ff6b5f",
+};

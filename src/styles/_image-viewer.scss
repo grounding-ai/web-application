@@ -31,4 +31,21 @@
       font-size: 1.7em;
     }
   }
+
+  .overlay-result {
+    font-size: 0.7em;
+
+    .result-label {
+      position: absolute;
+      top: 0;
+      left: 100%;
+    }
+
+    &:not(.expand):not(:hover) .result-label {
+      display: none !important;
+    }
+    &:hover {
+      z-index: 1;
+    }
+  }
 }
