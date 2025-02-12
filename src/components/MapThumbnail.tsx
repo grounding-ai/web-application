@@ -11,8 +11,8 @@ type Point = {
 };
 
 const DEFAULTS = {
-  size: 5,
-  color: "#cccccc",
+  size: 19,
+  color: "#ff6b5f",
 };
 
 function simplifyFraction(numerator: number, denominator: number) {
