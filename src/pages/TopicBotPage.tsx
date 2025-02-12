@@ -1,19 +1,17 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import { BiSolidQuoteAltLeft, BiSolidQuoteAltRight } from "react-icons/bi";
 import { FaArrowLeft } from "react-icons/fa6";
 import { useLoaderData } from "react-router-typesafe";
 
 import { SearchField } from "../components/SearchField.tsx";
-import { SearchResults } from "../components/SearchResults.tsx";
 import { TextReader } from "../components/TextReader.tsx";
 import { TopMenu } from "../components/TopMenu.tsx";
 import { useAppContext } from "../core/context.ts";
-import { Bot, Topic } from "../core/types.ts";
+import { Bot } from "../core/types.ts";
 import { getOtherLanguage, translate } from "../utils/translation.ts";
 import { topicPageLoader } from "./TopicPage.tsx";
 
 export const TopicBotPage: FC<{ bot: Bot }> = ({ bot }) => {
-  const [search, setSearch] = useState<null | { query: string; results: Topic[] }>(null);
   const { topic } = useLoaderData<typeof topicPageLoader>();
   const { language } = useAppContext();
 
@@ -27,7 +25,6 @@ export const TopicBotPage: FC<{ bot: Bot }> = ({ bot }) => {
       top: 0,
       behavior: "instant",
     });
-    setSearch(null);
   }, [topic.id]);
 
   return (
@@ -73,15 +70,11 @@ export const TopicBotPage: FC<{ bot: Bot }> = ({ bot }) => {
         )}
       </section>
 
-      <div className="p-4 pt-0 mb-2 font-monospace">
+      <div className="p-4 pt-0 font-monospace">
         <SearchField
           inputClassName={bot === "critic" ? "bg-light-purple border-light-purple" : "bg-light-blue border-light-blue"}
-          onSearch={(s) => {
-            setSearch(s);
-          }}
         />
       </div>
-      {search && <SearchResults {...search} />}
     </main>
   );
 };

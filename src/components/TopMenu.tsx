@@ -16,7 +16,7 @@ export const TopMenu: FC<PropsWithChildren<{ colorClassNameSuffix: string }>> = 
 
   return (
     <section className="p-4 position-relative">
-      <div className="flex-grow-1">
+      <div className="flex-grow-1 position-relative">
         <div className={cx(isMenuOpen && "invisible")}>{children}</div>
         {isMenuOpen && (
           <div className="position-absolute inset-0">

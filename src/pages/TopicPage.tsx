@@ -1,14 +1,12 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import { makeLoader, useLoaderData } from "react-router-typesafe";
 
 import { MapThumbnail } from "../components/MapThumbnail.tsx";
 import { SearchField } from "../components/SearchField.tsx";
-import { SearchResults } from "../components/SearchResults.tsx";
 import { TopMenu } from "../components/TopMenu.tsx";
 import { loadTopicContent } from "../core/api.ts";
 import { useAppContext } from "../core/context.ts";
-import { Topic } from "../core/types.ts";
 import { translate } from "../utils/translation.ts";
 
 export const topicPageLoader = makeLoader(async ({ params: { topicID } }) => {
@@ -19,7 +17,6 @@ export const topicPageLoader = makeLoader(async ({ params: { topicID } }) => {
 });
 
 export const TopicPage: FC = () => {
-  const [search, setSearch] = useState<null | { query: string; results: Topic[] }>(null);
   const { topic } = useLoaderData<typeof topicPageLoader>();
   const { language, topicsDict } = useAppContext();
   const topicPoint = topicsDict[topic.id];
@@ -29,7 +26,6 @@ export const TopicPage: FC = () => {
       top: 0,
       behavior: "instant",
     });
-    setSearch(null);
   }, [topic.id]);
 
   return (
@@ -77,15 +73,9 @@ export const TopicPage: FC = () => {
           </a>
         </section>
 
-        <div className="mb-2 font-monospace mt-5">
-          <SearchField
-            inputClassName="bg-light-blue border-light-blue"
-            onSearch={(s) => {
-              setSearch(s);
-            }}
-          />
+        <div className="font-monospace mt-5">
+          <SearchField inputClassName="bg-light-blue border-light-blue" />
         </div>
-        {search && <SearchResults {...search} />}
       </section>
     </main>
   );

@@ -1,50 +1,30 @@
 import cx from "classnames";
-import MiniSearch from "minisearch";
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { AiOutlineClose, AiOutlineSearch } from "react-icons/ai";
 
 import { useAppContext } from "../core/context.ts";
-import { Topic } from "../core/types.ts";
 import { translate } from "../utils/translation.ts";
 
 export const SearchField: FC<{
-  onSearch: (res: { query: string; results: Topic[] } | null) => void;
   inputClassName?: string;
-}> = ({ onSearch, inputClassName }) => {
-  const { topics, topicsDict, language } = useAppContext();
-  const [query, setQuery] = useState("");
-  const miniSearch = useMemo(() => {
-    const miniSearch = new MiniSearch({
-      fields: ["label", "index"],
-      idField: "id",
-    });
-    miniSearch.addAll(
-      topics.map((topic) => ({
-        id: topic.id,
-        label: topic.label,
-        index: topic.index + "",
-      })),
-    );
-    return miniSearch;
-  }, [topics]);
-  const onSubmit = useCallback(
-    (q = query) => {
-      if (!q) {
-        onSearch(null);
-        return;
-      }
+  initialQuery?: string;
+}> = ({ inputClassName, initialQuery }) => {
+  const { language } = useAppContext();
+  const [query, setQuery] = useState(initialQuery);
+  const onSubmit = (query: string = "") => {
+    if (query) window.location.href = `#/map?q=${encodeURIComponent(query)}`;
+    else window.location.href = "#/map";
+  };
 
-      const results = miniSearch.search(q).map(({ id }) => topicsDict[id]);
-      onSearch({ query: q, results });
-    },
-    [miniSearch, onSearch, query, topicsDict],
-  );
+  useEffect(() => {
+    setQuery(initialQuery);
+  }, [initialQuery]);
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        onSubmit();
+        onSubmit(query);
       }}
     >
       <label htmlFor="topics-search" className="form-label text-uppercase mb-0">
@@ -59,6 +39,7 @@ export const SearchField: FC<{
       <div className="input-group">
         <input
           type="string"
+          autoComplete="off"
           className={cx("form-control bg-light-blue", inputClassName)}
           id="topics-search"
           placeholder="Eg: 1640, Food"
@@ -70,7 +51,6 @@ export const SearchField: FC<{
             className="btn btn-light px-1"
             type="button"
             onClick={() => {
-              setQuery("");
               onSubmit("");
             }}
           >
