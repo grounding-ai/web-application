@@ -11,8 +11,8 @@ export const Map: FC = () => {
 
   return (
     <main className="bg-secondary text-white d-flex flex-column">
-      <TopMenu>
-        <h1 className="fs-5 mb-0 my-2">Grounding AI</h1>
+      <TopMenu colorClassNameSuffix="light">
+        <h1 className="fs-5 mt-1">Grounding AI</h1>
       </TopMenu>
 
       <section className="flex-grow-1 position-relative">
@@ -24,7 +24,7 @@ export const Map: FC = () => {
         )}
       </section>
 
-      <section className="p-3 pb-4">
+      <section className="p-4 pb-4">
         <SearchField
           inputClassName="bg-light-blue border-light-blue"
           onSearch={(s) => {

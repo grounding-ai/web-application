@@ -7,23 +7,26 @@ import { useAppContext } from "../core/context.ts";
 import { translate } from "../utils/translation.ts";
 import LanguageSelect from "./LanguageSelect.tsx";
 
-export const TopMenu: FC<PropsWithChildren<{ className?: string }>> = ({ children, className }) => {
+export const TopMenu: FC<PropsWithChildren<{ colorClassNameSuffix: string }>> = ({
+  children,
+  colorClassNameSuffix,
+}) => {
   const { language } = useAppContext();
   const [isMenuOpen, setMenuOpen] = useState(false);
 
   return (
-    <section className={cx("p-3 d-flex flex-row align-items-baseline", className)}>
+    <section className="p-4">
       <div className="flex-grow-1 position-relative">
-        {children}
+        <div className={cx(isMenuOpen && "invisible")}>{children}</div>
         {isMenuOpen && (
-          <div className="bg-secondary position-absolute inset-0">
+          <div className="position-absolute inset-0">
             <LanguageSelect
               className="w-auto me-1 d-inline-block align-baseline"
-              selectClassName="border-white text-white"
+              selectClassName={`border-${colorClassNameSuffix} text-${colorClassNameSuffix}`}
             />
             <a
               href="#/about"
-              className="btn btn-outline-light d-inline-block align-baseline font-monospace text-uppercase me-1"
+              className={`btn btn-sm btn-outline-${colorClassNameSuffix} d-inline-block align-baseline font-monospace text-uppercase me-1`}
             >
               {translate(
                 {
@@ -33,13 +36,19 @@ export const TopMenu: FC<PropsWithChildren<{ className?: string }>> = ({ childre
                 language,
               )}
             </a>
-            <a href="#/" className="btn btn-outline-light d-inline-block align-baseline font-monospace text-uppercase">
+            <a
+              href="#/"
+              className={`btn btn-sm btn-outline-${colorClassNameSuffix} d-inline-block align-baseline font-monospace text-uppercase`}
+            >
               <AiOutlineHome />
             </a>
           </div>
         )}
       </div>
-      <button className="btn text-white py-0 px-1" onClick={() => setMenuOpen(!isMenuOpen)}>
+      <button
+        className={`p-4 mt-1 position-absolute end-0 top-0 border-0 bg-transparent text-${colorClassNameSuffix}`}
+        onClick={() => setMenuOpen(!isMenuOpen)}
+      >
         {isMenuOpen ? <FaTimes /> : <FaBars />}
       </button>
     </section>

@@ -32,9 +32,9 @@ export const TopicBotPage: FC<{ bot: Bot }> = ({ bot }) => {
 
   return (
     <main className={`d-flex flex-column text-${textColor} bg-${bgColor}`}>
-      <TopMenu>
-        <a href={`#/topic/${topic.id}`} className={`btn align-baseline text-${textColor}`}>
-          <FaArrowLeft className="me-2" /> Back
+      <TopMenu colorClassNameSuffix={textColor}>
+        <a href={`#/topic/${topic.id}`} className={`btn align-baseline p-0 pt-1 border-0 text-${textColor}`}>
+          <FaArrowLeft className="me-2" /> {translate({ en: "Back", da: "Tilbage" }, language)}
         </a>
       </TopMenu>
 

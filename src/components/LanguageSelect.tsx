@@ -20,7 +20,7 @@ const LanguageSelect: FC<{ className?: string | null; selectClassName?: string |
   return (
     <div className={cx("position-relative d-inline-block", className)}>
       <select
-        className={cx("form-select z-1 position-relative", selectClassName)}
+        className={cx("form-select form-select-sm z-1 position-relative", selectClassName)}
         value={language}
         onChange={(e) => setLanguage(e.target.value as Language)}
       >

@@ -34,8 +34,8 @@ export const TopicPage: FC = () => {
 
   return (
     <main className="bg-secondary text-white d-flex flex-column">
-      <TopMenu>
-        <a href="#/map" className="btn align-baseline text-white">
+      <TopMenu colorClassNameSuffix="light">
+        <a href="#/map" className="btn align-baseline p-0 pt-1 border-0 text-white">
           <FaArrowLeft className="me-2" /> Back
         </a>
       </TopMenu>
