@@ -13,17 +13,7 @@ export const TextReader: FC<{ text: string; textLanguage: Language; className?: 
   className,
 }) => {
   const { language: uiLanguage } = useAppContext();
-  const { isSpeaking, cancelSpeak, speak, setVoice, options } = useSpeech(BC47_LANGUAGES[textLanguage]);
-
-  const enabled = useMemo(() => {
-    const voiceOptions = options.filter((option) => option.value !== "disabled");
-    if (voiceOptions.length) {
-      setVoice(voiceOptions[0]);
-      return true;
-    } else {
-      return false;
-    }
-  }, [options, setVoice]);
+  const { isSpeaking, cancelSpeak, speak, enabled } = useSpeech(BC47_LANGUAGES[textLanguage]);
 
   useEffect(() => {
     return () => {
