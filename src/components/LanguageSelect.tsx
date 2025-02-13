@@ -25,7 +25,7 @@ const LanguageSelect: FC<{ className?: string | null; selectClassName?: string |
         onChange={(e) => setLanguage(e.target.value as Language)}
       >
         {OPTIONS.map(({ value, label }) => (
-          <option key={value} value={value} selected={value === language}>
+          <option key={value} value={value}>
             {label.toUpperCase()}
           </option>
         ))}

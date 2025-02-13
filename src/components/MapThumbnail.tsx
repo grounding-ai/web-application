@@ -32,8 +32,10 @@ export const MapThumbnail: FC<{ points?: Topic[]; className?: string }> = ({ poi
       />
       <svg className="points position-absolute inset-0 w-100 h-100">
         {points?.map((point) => {
-          const { x, y, size, color } = { ...POINT_DEFAULTS, ...point };
-          return <circle cx={(x / width) * 100 + "%"} cy={(y / height) * 100 + "%"} r={size / 2} fill={color} />;
+          const { id, x, y, size, color } = { ...POINT_DEFAULTS, ...point };
+          return (
+            <circle key={id} cx={(x / width) * 100 + "%"} cy={(y / height) * 100 + "%"} r={size / 2} fill={color} />
+          );
         })}
       </svg>
     </div>
