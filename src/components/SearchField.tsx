@@ -46,11 +46,12 @@ export const SearchField: FC<{
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        {query && (
+        {initialQuery && (
           <button
-            className="btn btn-light px-1"
+            className={cx("btn btn-light px-1", inputClassName)}
             type="button"
             onClick={() => {
+              setQuery("");
               onSubmit("");
             }}
           >
