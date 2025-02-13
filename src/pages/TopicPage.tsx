@@ -41,7 +41,7 @@ export const TopicPage: FC = () => {
           <small className="px-2 py-1 border border-light-blue color-light-blue font-monospace">#{topic.number}</small>
         </div>
 
-        <h1 className="fw-bolder mb-3">{translate(topic.headline, language)}</h1>
+        <h1 className="fw-bolder mb-3 hyphens">{translate(topic.headline, language)}</h1>
 
         <MapThumbnail className="w-100 mb-3" points={[topicPoint]} />
 

@@ -35,15 +35,20 @@ export const TopicBotPage: FC<{ bot: Bot }> = ({ bot }) => {
         </a>
       </TopMenu>
 
-      <section className="p-4 pb-0 d-flex flex-row align-items-end justify-content-between mb-3">
-        <div>
+      <section className="m-4 pb-0 d-flex flex-row align-items-end justify-content-between mb-3">
+        <div className="flex-shrink-1 pt-1" style={{ flexBasis: "65%" }}>
           <div className="mb-3">
             <small className={`px-2 py-1 border border-${textColor} font-monospace`}>#{topic.number}</small>
           </div>
 
-          <h1 className="fw-bolder mb-3">{translate(topic.headline, language)}</h1>
+          <h1 className="fw-bolder mb-0 hyphens">{translate(topic.headline, language)}</h1>
         </div>
-        <img src={`${import.meta.env.BASE_URL}/bot.png`} alt="The advocate bot" className="img-fluid w-50" />
+        <img
+          src={`${import.meta.env.BASE_URL}/bot.png`}
+          alt="The advocate bot"
+          className="img-fluid flex-shrink-0"
+          style={{ width: "35%" }}
+        />
       </section>
 
       {botContent && (

@@ -1,8 +1,16 @@
 .inset-0 {
   inset: 0 !important;
 }
+
 .disc {
   width: 10px;
   height: 10px;
   border-radius: 50%;
+}
+
+.hyphens {
+  -webkit-hyphens: auto !important;
+  -moz-hyphens: auto !important;
+  -ms-hyphens: auto !important;
+  hyphens: auto !important;
 }
