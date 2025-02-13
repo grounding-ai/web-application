@@ -3,9 +3,9 @@ export const LANGUAGES_SET = new Set<string>(LANGUAGES);
 export const DEFAULT_LANGUAGE = "en";
 export type Language = (typeof LANGUAGES)[number];
 export type Translation = Partial<Record<Language, string | null>>;
-export const BC47_LANGUAGES: Record<Language, (string | RegExp)[]> = {
-  en: ["en-GB", "en", /^en-/],
-  da: ["da-DK", "da", /^da-/],
+export const VOICES_FILTERS: Record<Language, (string | RegExp)[]> = {
+  en: ["en-GB", "en", /^en[-_]/],
+  da: ["da-DK", "da", /^da[-_]/],
 };
 
 export const BOTS = ["critic", "potential"] as const;
