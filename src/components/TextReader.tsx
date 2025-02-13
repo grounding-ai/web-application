@@ -3,7 +3,7 @@ import { FC, useEffect } from "react";
 import { FaPause, FaPlay } from "react-icons/fa6";
 
 import { useAppContext } from "../core/context.ts";
-import { Language, VOICES_FILTERS } from "../core/types.ts";
+import { Language } from "../core/types.ts";
 import { translate } from "../utils/translation.ts";
 import { useSpeech } from "../utils/useSpeech.ts";
 
@@ -13,7 +13,7 @@ export const TextReader: FC<{ text: string; textLanguage: Language; className?: 
   className,
 }) => {
   const { language: uiLanguage } = useAppContext();
-  const { isSpeaking, cancelSpeak, speak, enabled } = useSpeech(VOICES_FILTERS[textLanguage]);
+  const { isSpeaking, cancelSpeak, speak, enabled } = useSpeech(textLanguage);
 
   useEffect(() => {
     return () => {

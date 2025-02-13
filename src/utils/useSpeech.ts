@@ -1,9 +1,36 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { Language, VOICES_FILTERS, VOICES_LANGUAGES } from "../core/types.ts";
+
 type SpeechSynthesisVoice = ReturnType<typeof speechSynthesis.getVoices>[number];
 const IS_ENABLED = typeof speechSynthesis !== "undefined";
 
-export function useSpeech(langs: (string | RegExp)[] = []) {
+function useAllVoices() {
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+
+  useEffect(() => {
+    const startTime = Date.now();
+    const TIMEOUT = 5000;
+
+    const interval = setInterval(() => {
+      const allVoices = window.speechSynthesis.getVoices();
+      if (allVoices.length) {
+        setVoices(allVoices);
+        clearInterval(interval);
+        return;
+      }
+      if (Date.now() - startTime > TIMEOUT) {
+        clearInterval(interval);
+        return;
+      }
+    }, 10);
+  }, []);
+
+  return voices;
+}
+
+export function useSpeech(lang: Language) {
+  const allVoices = useAllVoices();
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
   const cancelSpeak = useCallback(() => {
@@ -14,11 +41,15 @@ export function useSpeech(langs: (string | RegExp)[] = []) {
   const speak = useCallback(
     (sentence: string) => {
       if (speechSynthesis.speaking) cancelSpeak();
-
       if (!voice || !IS_ENABLED) return;
-      const utterance = new SpeechSynthesisUtterance(sentence);
+
+      const utterance = new SpeechSynthesisUtterance();
       utterance.voice = voice;
       utterance.rate = 1;
+      utterance.pitch = 1;
+      utterance.lang = VOICES_LANGUAGES[lang];
+      utterance.text = sentence;
+      utterance.volume = 0.5;
       speechSynthesis.speak(utterance);
       setIsSpeaking(true);
     },
@@ -26,26 +57,25 @@ export function useSpeech(langs: (string | RegExp)[] = []) {
   );
 
   useEffect(() => {
-    if (IS_ENABLED) {
+    if (IS_ENABLED && allVoices.length) {
       speechSynthesis.addEventListener("end", () => setIsSpeaking(false));
 
-      setTimeout(() => {
-        // Load voices
-        const allVoices = speechSynthesis.getVoices();
-        let voice: SpeechSynthesisVoice | null = null;
-        if (langs.length) {
-          langs.some((lang) => {
-            voice = allVoices.find((v) => (typeof lang === "string" ? v.lang === lang : v.lang.match(lang))) || null;
-            return voice;
-          });
-        } else {
-          voice = allVoices[0] || null;
-        }
+      // Load voices
+      let voice: SpeechSynthesisVoice | null = null;
+      const filters = VOICES_FILTERS[lang];
+      if (filters.length) {
+        filters.some((filter) => {
+          voice =
+            allVoices.find((v) => (typeof filter === "string" ? v.lang === filter : v.lang.match(filter))) || null;
+          return voice;
+        });
+      } else {
+        voice = allVoices[0] || null;
+      }
 
-        setVoice(voice);
-      }, 0);
+      setVoice(voice);
     }
-  }, [langs]);
+  }, [allVoices, lang]);
 
   return {
     speak,

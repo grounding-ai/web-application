@@ -5,7 +5,11 @@ export type Language = (typeof LANGUAGES)[number];
 export type Translation = Partial<Record<Language, string | null>>;
 export const VOICES_FILTERS: Record<Language, (string | RegExp)[]> = {
   en: ["en-GB", "en", /^en[-_]/],
-  da: ["da-DK", "da", /^da[-_]/],
+  da: ["da-DK", "da", /^da[-_]/, /^en[-_]/],
+};
+export const VOICES_LANGUAGES: Record<Language, string> = {
+  en: "en-GB",
+  da: "da-DK",
 };
 
 export const BOTS = ["critic", "potential"] as const;
