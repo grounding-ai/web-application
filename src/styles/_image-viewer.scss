@@ -3,9 +3,13 @@
   inset: 0;
   background: $map-background-color;
 
-  .openseadragon-wrapper {
+  .openseadragon-wrapper,
+  .topics-canvas {
     position: absolute;
     inset: 0;
+  }
+  .topics-canvas {
+    pointer-events: none;
   }
 
   // Hide default controls
@@ -34,6 +38,7 @@
 
   .overlay-result {
     font-size: 0.7em;
+    transform: translateX(-50%);
 
     .result-label {
       position: absolute;
@@ -44,8 +49,10 @@
     &:not(.expand):not(:hover) .result-label {
       display: none !important;
     }
+
+    z-index: 1;
     &:hover {
-      z-index: 1;
+      z-index: 2;
     }
   }
 }

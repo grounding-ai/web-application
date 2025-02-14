@@ -11,13 +11,20 @@ export async function loadTopics(): Promise<Topic[]> {
     header: true,
   });
 
-  return data.map((row) => ({
-    id: row.id,
-    label: row.label,
-    index: +row.number,
-    x: +row.X,
-    y: +row.Y,
-  }));
+  return data.flatMap((row) =>
+    row.id && row.label && !isNaN(+row.number)
+      ? [
+          {
+            id: row.id,
+            label: row.label,
+            index: +row.number,
+            localDensity: +row.local_density,
+            x: +row.X,
+            y: +row.Y,
+          },
+        ]
+      : [],
+  );
 }
 
 export async function loadTopicContent(id: string): Promise<TopicContent> {

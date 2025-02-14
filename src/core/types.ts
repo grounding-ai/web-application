@@ -16,7 +16,7 @@ export const BOTS = ["critic", "potential"] as const;
 export type Bot = (typeof BOTS)[number];
 
 export type Coordinates = { x: number; y: number };
-export type Topic = { id: string; label: string; index: number } & Coordinates;
+export type Topic = { id: string; label: string; index: number; localDensity: number } & Coordinates;
 export type TopicContent = {
   id: string;
   number: number;
