@@ -66,6 +66,9 @@ jobs:
       - name: Generate JSON summaries
         run: npm run make-summaries
 
+      - name: Generate full contents CSV
+        run: npm run make-indices
+
       - name: Build project
         run: npm run build
 

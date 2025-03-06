@@ -47,7 +47,10 @@ export const Root: FC = () => {
       if (compressedIndex) {
         console.log("Try to decompress full index");
         const jsonIndex = await decompressString(compressedIndex);
-        setSearch(MiniSearch.loadJSON(jsonIndex, FULL_INDEX_OPTIONS));
+        const miniSearch = MiniSearch.loadJSON(jsonIndex, FULL_INDEX_OPTIONS);
+        if (!miniSearch["_documentCount"]) throw new Error("Saved index is not valid.");
+
+        setSearch(miniSearch);
         setDataStatus("full");
         hasIndexedFullDataset = true;
         console.log("Full index loaded from local storage");
