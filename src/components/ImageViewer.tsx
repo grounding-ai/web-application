@@ -1,5 +1,6 @@
+import cx from "classnames";
 import { clamp, max } from "lodash";
-import { Options, Placement, Point as SeadragonPoint, Viewer } from "openseadragon";
+import { Placement, Point as SeadragonPoint, Viewer } from "openseadragon";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { FaRegCircleDot } from "react-icons/fa6";
@@ -8,18 +9,21 @@ import { useAppContext } from "../core/context.ts";
 import { Topic } from "../core/types.ts";
 import { height, width } from "../map-dimensions.json";
 import { getElements, getQuadTree } from "../utils/quadtree.ts";
+import { useIsMounted } from "../utils/useIsMounted.ts";
 
 const ZOOM_BUTTON_INCR = 1.4;
 const MIN_EXPAND_ZOOM = 20;
 const MIN_HIGHLIGHTS_ZOOM = 14;
+const ID = "seadragon-viewer";
+const TILE_SOURCES = `${import.meta.env.BASE_URL}/map/map.dzi`;
 
-export const ImageViewer: FC<{ id?: string; tileSources: Options["tileSources"]; points?: Topic[] }> = ({
-  id = "seadragon-viewer",
-  tileSources,
-  points,
-}) => {
+export const ImageViewer: FC<{
+  points?: Topic[];
+  hidden?: boolean;
+}> = ({ points, hidden }) => {
+  const isMounted = useIsMounted();
   const overlaysRef = useRef<Map<string, { dom: HTMLDivElement; topic: Topic }>>(new Map());
-  const viewerRef = useRef<Viewer | null>(null);
+  const [viewer, setViewer] = useState<Viewer | null>(null);
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
 
   const { topics } = useAppContext();
@@ -29,7 +33,6 @@ export const ImageViewer: FC<{ id?: string; tileSources: Options["tileSources"];
   const pointsToDisplay = useMemo(() => points || highlightedTopics || [], [highlightedTopics, points]);
 
   const getTopicsOnScreen = useCallback(() => {
-    const viewer = viewerRef.current;
     if (!viewer) return [];
     const viewport = viewer.viewport;
 
@@ -46,13 +49,13 @@ export const ImageViewer: FC<{ id?: string; tileSources: Options["tileSources"];
       ],
       quadTree,
     );
-  }, [quadTree]);
+  }, [quadTree, viewer]);
 
   // Handle Viewer lifecycle:
   useEffect(() => {
     const viewer = new Viewer({
-      id,
-      tileSources,
+      id: ID,
+      tileSources: TILE_SOURCES,
       animationTime: 0.5,
       homeFillsViewer: true,
       constrainDuringPan: true,
@@ -60,8 +63,21 @@ export const ImageViewer: FC<{ id?: string; tileSources: Options["tileSources"];
     const canvas = document.createElement("CANVAS") as HTMLCanvasElement;
     canvas.classList.add("topics-canvas");
     viewer.container.querySelector(".openseadragon-canvas")!.append(canvas);
-    const getTopicSpecificZoom = (localDensity: number, zoom: number) => zoom - (localDensity / maxLocalDensity) * 80;
 
+    setViewer(viewer);
+    ctxRef.current = canvas.getContext("2d");
+    return () => {
+      viewer.destroy();
+      setViewer(null);
+      ctxRef.current = null;
+    };
+  }, []);
+
+  // Handle topics rendering:
+  useEffect(() => {
+    if (!viewer || points) return;
+
+    const getTopicSpecificZoom = (localDensity: number, zoom: number) => zoom - (localDensity / maxLocalDensity) * 80;
     viewer.addHandler("viewport-change", () => {
       const { viewport } = viewer;
       const zoom = viewport.getZoom(true);
@@ -79,19 +95,10 @@ export const ImageViewer: FC<{ id?: string; tileSources: Options["tileSources"];
         else dom.classList.remove("expand");
       });
     });
-
-    viewerRef.current = viewer;
-    ctxRef.current = canvas.getContext("2d");
-    return () => {
-      viewer.destroy();
-      viewerRef.current = null;
-      ctxRef.current = null;
-    };
-  }, [getTopicsOnScreen, id, maxLocalDensity, quadTree, tileSources]);
+  }, [getTopicsOnScreen, isMounted, maxLocalDensity, points, viewer]);
 
   // Handle canvas rendering small points:
   useEffect(() => {
-    const viewer = viewerRef.current;
     if (!viewer || points) return;
 
     const handler = () => {
@@ -126,20 +133,13 @@ export const ImageViewer: FC<{ id?: string; tileSources: Options["tileSources"];
     return () => {
       viewer.removeHandler("viewport-change", handler);
     };
-  }, [getTopicsOnScreen, points, quadTree]);
+  }, [getTopicsOnScreen, points, quadTree, isMounted, viewer]);
 
   // Handle overlays/highlights lifecycle:
   useEffect(() => {
-    const viewer = viewerRef.current;
     if (!viewer) return;
 
     const overlaysCache = overlaysRef.current;
-    if (!pointsToDisplay.length) {
-      overlaysCache.forEach(({ dom }, id) => {
-        viewer.removeOverlay(dom);
-        overlaysCache.delete(id);
-      });
-    }
 
     // Handle current overlays:
     const currentOverlays = new Set<string>();
@@ -179,29 +179,20 @@ export const ImageViewer: FC<{ id?: string; tileSources: Options["tileSources"];
         overlaysCache.delete(id);
       }
     });
-  }, [pointsToDisplay]);
+  }, [pointsToDisplay, isMounted, viewer]);
 
   return (
-    <div className="image-viewer">
-      <div id={id} className="openseadragon-wrapper" />
+    <div className={cx("image-viewer", hidden && "visually-hidden")}>
+      <div id={ID} className="openseadragon-wrapper" />
 
       <div className="navigation p-3 d-flex flex-column">
-        <button
-          className="btn btn-primary border-white mb-1 small"
-          onClick={() => viewerRef.current?.viewport.goHome()}
-        >
+        <button className="btn btn-primary border-white mb-1 small" onClick={() => viewer?.viewport.goHome()}>
           <FaRegCircleDot className="small" />
         </button>
-        <button
-          className="btn btn-primary border-white mb-1"
-          onClick={() => viewerRef.current?.viewport.zoomBy(ZOOM_BUTTON_INCR)}
-        >
+        <button className="btn btn-primary border-white mb-1" onClick={() => viewer?.viewport.zoomBy(ZOOM_BUTTON_INCR)}>
           <AiOutlinePlus />
         </button>
-        <button
-          className="btn btn-primary border-white"
-          onClick={() => viewerRef.current?.viewport.zoomBy(1 / ZOOM_BUTTON_INCR)}
-        >
+        <button className="btn btn-primary border-white" onClick={() => viewer?.viewport.zoomBy(1 / ZOOM_BUTTON_INCR)}>
           <AiOutlineMinus />
         </button>
       </div>

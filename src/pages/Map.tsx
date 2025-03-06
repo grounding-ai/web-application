@@ -1,6 +1,5 @@
 import cx from "classnames";
 import { fromPairs } from "lodash";
-import MiniSearch from "minisearch";
 import { FC, useMemo, useState } from "react";
 import { useLocation } from "react-router";
 
@@ -13,30 +12,29 @@ import { useAppContext } from "../core/context.ts";
 import { translate } from "../utils/translation.ts";
 
 export const Map: FC = () => {
-  const { language, topics, topicsDict } = useAppContext();
+  const { language, topicsDict, search: miniSearch, dataStatus } = useAppContext();
   const [mode, setMode] = useState<"map" | "list">("map");
   const [showClusters, setShowClusters] = useState(false);
   const { search } = useLocation();
   const fullQuery = useMemo(() => fromPairs([...new URLSearchParams(search.replace(/^\?/, ""))]), [search]);
   const query = fullQuery.q;
-  const miniSearch = useMemo(() => {
-    const miniSearch = new MiniSearch({
-      fields: ["label", "index"],
-      idField: "id",
-    });
-    miniSearch.addAll(
-      topics.map((topic) => ({
-        id: topic.id,
-        label: topic.label,
-        index: topic.index + "",
-      })),
-    );
-    return miniSearch;
-  }, [topics]);
   const results = useMemo(() => {
     if (!query) return null;
-    return miniSearch.search(query).map(({ id }) => topicsDict[id]);
-  }, [miniSearch, query, topicsDict]);
+
+    const fuzzy = !query.trim().match(/^\d+$/) && query.length > 4;
+    return miniSearch
+      .search(query, {
+        fuzzy: fuzzy,
+        maxFuzzy: 2,
+        combineWith: "and",
+        fields: ["index", "title", language],
+        boost: {
+          index: 5,
+          title: 4,
+        },
+      })
+      .flatMap(({ id }) => (topicsDict[id] ? [topicsDict[id]] : []));
+  }, [language, miniSearch, query, topicsDict]);
 
   return (
     <main className="bg-secondary text-white d-flex flex-column">
@@ -45,7 +43,7 @@ export const Map: FC = () => {
       </TopMenu>
 
       <section className="flex-grow-1 position-relative">
-        <ImageViewer tileSources={`${import.meta.env.BASE_URL}/map/map.dzi`} points={results || undefined} />
+        <ImageViewer points={results || undefined} hidden={mode !== "map"} />
         {mode === "list" && results && (
           <div className="position-absolute inset-0 bg-secondary p-4 overflow-auto pt-5">
             <SearchResults query={query} results={results} />
@@ -87,7 +85,11 @@ export const Map: FC = () => {
         </div>
 
         <div className="font-monospace">
-          <SearchField inputClassName="bg-light-blue border-light-blue" initialQuery={query} />
+          <SearchField
+            inputClassName="bg-light-blue border-light-blue"
+            initialQuery={query}
+            loading={dataStatus !== "full"}
+          />
         </div>
       </section>
     </main>

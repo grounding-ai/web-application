@@ -2,12 +2,12 @@ import { parse } from "papaparse";
 
 import { Topic, TopicContent } from "./types";
 
-type CSVRowKey = "id" | "label" | "number" | "X" | "Y" | "local_density";
-type CSVRow = Record<CSVRowKey, string>;
+type CSVTopicKey = "id" | "label" | "number" | "X" | "Y" | "local_density";
+type CSVTopic = Record<CSVTopicKey, string>;
 export async function loadTopics(): Promise<Topic[]> {
   const res = await fetch(`${import.meta.env.BASE_URL}/labels.csv`);
   const csv = await res.text();
-  const { data } = parse<CSVRow>(csv, {
+  const { data } = parse<CSVTopic>(csv, {
     header: true,
   });
 
@@ -30,4 +30,16 @@ export async function loadTopics(): Promise<Topic[]> {
 export async function loadTopicContent(id: string): Promise<TopicContent> {
   const res = await fetch(`${import.meta.env.BASE_URL}/summaries/${id}.json`);
   return (await res.json()) as TopicContent;
+}
+
+type CSVContentKey = "id" | "title" | "en" | "da";
+type CSVContent = Record<CSVContentKey, string>;
+export async function loadContents(): Promise<CSVContent[]> {
+  const res = await fetch(`${import.meta.env.BASE_URL}/contents.csv`);
+  const csv = await res.text();
+  const { data } = parse<CSVContent>(csv, {
+    header: true,
+  });
+
+  return data.filter((row) => row.id);
 }

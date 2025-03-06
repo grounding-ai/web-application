@@ -12,6 +12,7 @@
     "make-thumbnail": "rimraf public/map.jpg && vips thumbnail resources/map.jpg public/map.jpg 400",
     "make-summaries": "rimraf public/summaries && tsx bin/build-json-summaries.ts",
     "make-map-dimensions": "rimraf src/map-dimensions.json && echo \"{ \\\"width\\\": $(vips im_header_int width resources/map.jpg), \\\"height\\\": $(vips im_header_int height resources/map.jpg) }\" > src/map-dimensions.json",
+    "make-indices": "tsx bin/build-contents-file.ts",
     "prepare": "npm run make-tiles && npm run make-thumbnail && npm run make-map-dimensions && npm run make-summaries"
   },
   "dependencies": {

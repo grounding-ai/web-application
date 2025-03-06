@@ -1,8 +1,11 @@
+import MiniSearch from "minisearch";
 import { createContext, useContext } from "react";
 
 import { Language, Topic } from "./types";
 
 export type AppContextType = {
+  dataStatus: "titles-only" | "full";
+  search: MiniSearch;
   language: Language;
   topics: Topic[];
   topicsDict: Record<string, Topic>;

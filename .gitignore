@@ -25,6 +25,7 @@ dist-ssr
 
 # Large files (and their derived files)
 public/map.jpg
+public/contents.csv
 public/map/*
 !public/map/.gitkeep
 public/summaries/*

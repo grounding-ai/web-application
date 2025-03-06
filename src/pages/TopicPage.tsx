@@ -31,9 +31,9 @@ export const TopicPage: FC = () => {
   return (
     <main className="bg-secondary text-white d-flex flex-column">
       <TopMenu colorClassNameSuffix="light">
-        <a href="#/map" className="btn align-baseline p-0 pt-1 border-0 text-white">
-          <FaArrowLeft className="me-2" /> Back
-        </a>
+        <button className="btn align-baseline p-0 pt-1 border-0 text-white" onClick={() => history.back()}>
+          <FaArrowLeft className="me-2" /> {translate({ en: "Back", da: "Tilbage" }, language)}
+        </button>
       </TopMenu>
 
       <section className="p-4">

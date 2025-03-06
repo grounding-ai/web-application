@@ -8,9 +8,10 @@ import { translate } from "../utils/translation.ts";
 export const SearchField: FC<{
   inputClassName?: string;
   initialQuery?: string;
-}> = ({ inputClassName, initialQuery }) => {
+  loading?: boolean;
+}> = ({ inputClassName, loading, initialQuery = "" }) => {
   const { language } = useAppContext();
-  const [query, setQuery] = useState(initialQuery);
+  const [query, setQuery] = useState<string>(initialQuery);
   const onSubmit = (query: string = "") => {
     if (query) window.location.href = `#/map?q=${encodeURIComponent(query)}`;
     else window.location.href = "#/map";
@@ -46,6 +47,17 @@ export const SearchField: FC<{
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
+        {loading && (
+          <div className="position-relative">
+            <div
+              className="spinner-border spinner-border-sm text-primary rounded-5 mx-2 position-absolute end-0"
+              role="status"
+              style={{ top: "28%" }}
+            >
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        )}
         {initialQuery && (
           <button
             className={cx("btn btn-light px-1", inputClassName)}

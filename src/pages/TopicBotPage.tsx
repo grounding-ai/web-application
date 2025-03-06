@@ -30,9 +30,9 @@ export const TopicBotPage: FC<{ bot: Bot }> = ({ bot }) => {
   return (
     <main className={`d-flex flex-column text-${textColor} bg-${bgColor}`}>
       <TopMenu colorClassNameSuffix={textColor}>
-        <a href={`#/topic/${topic.id}`} className={`btn align-baseline p-0 pt-1 border-0 text-${textColor}`}>
+        <button className={`btn align-baseline p-0 pt-1 border-0 text-${textColor}`} onClick={() => history.back()}>
           <FaArrowLeft className="me-2" /> {translate({ en: "Back", da: "Tilbage" }, language)}
-        </a>
+        </button>
       </TopMenu>
 
       <section className="m-4 pb-0 d-flex flex-row align-items-end justify-content-between mb-3">
