@@ -1,12 +1,13 @@
 import { keyBy } from "lodash";
 import MiniSearch from "minisearch";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { Outlet } from "react-router";
 import { makeLoader, useLoaderData } from "react-router-typesafe";
 
 import { loadContents, loadTopics } from "../core/api.ts";
 import { AppContext, AppContextType } from "../core/context.ts";
 import { DEFAULT_LANGUAGE, LANGUAGES_SET, Language, Topic } from "../core/types.ts";
+import { compressString, decompressString } from "../utils/compression.ts";
 
 const LANGUAGE_KEY = `grounded-ai-language`;
 const INDEX_KEY = "grounded-ai-index";
@@ -36,21 +37,28 @@ export const Root: FC = () => {
   }, []);
   const [language, setLanguage] = useState<Language>(initialLanguage);
   const [selectedTopic, selectTopic] = useState<Topic | null>(null);
-  const [dataStatus, setDataStatus] = useState<AppContextType["dataStatus"]>("titles-only");
-  const initialSearch = useMemo(() => {
-    let miniSearch: MiniSearch | null = null;
+  const [dataStatus, setDataStatus] = useState<AppContextType["dataStatus"]>("no-data");
+  const [search, setSearch] = useState(new MiniSearch(TITLE_INDEX_OPTIONS));
+  const handleIndex = useCallback(async () => {
+    // First, let's check if there is a locally saved version:
+    let hasIndexedFullDataset = false;
     try {
-      const index = localStorage.getItem(INDEX_KEY);
-      if (index) {
-        miniSearch = MiniSearch.loadJSON(JSON.parse(index), FULL_INDEX_OPTIONS);
-        console.log("Full contents read from local storage");
+      const compressedIndex = localStorage.getItem(INDEX_KEY);
+      if (compressedIndex) {
+        console.log("Try to decompress full index");
+        const jsonIndex = await decompressString(compressedIndex);
+        setSearch(MiniSearch.loadJSON(jsonIndex, FULL_INDEX_OPTIONS));
+        setDataStatus("full");
+        hasIndexedFullDataset = true;
+        console.log("Full index loaded from local storage");
       }
     } catch (e) {
+      console.error("Failed to decompress full index");
       console.error(e);
     }
 
-    if (!miniSearch) {
-      miniSearch = new MiniSearch(TITLE_INDEX_OPTIONS);
+    if (!hasIndexedFullDataset) {
+      const miniSearch = new MiniSearch(TITLE_INDEX_OPTIONS);
       miniSearch.addAll(
         topics.map((topic) => ({
           id: topic.id,
@@ -58,40 +66,42 @@ export const Root: FC = () => {
           index: topic.index + "",
         })),
       );
-      console.log("Headlines and ids indexed");
-    }
+      setSearch(miniSearch);
+      setDataStatus("titles-only");
+      console.log("Light dataset indexed");
 
-    return miniSearch;
-  }, [topics]);
-  const [search, setSearch] = useState(initialSearch);
+      // Now load full dataset:
+      const contents = await loadContents();
+      const fullDatasetMiniSearch = new MiniSearch(FULL_INDEX_OPTIONS);
+      await fullDatasetMiniSearch.addAllAsync(
+        contents.map((content) => ({
+          ...content,
+          index: topicsDict[content.id]?.index,
+        })),
+      );
+      console.log("Full contents indexed");
+      setSearch(fullDatasetMiniSearch);
+      setDataStatus("full");
+
+      try {
+        console.log("Trying to save full index locally...");
+        const compressedIndex = await compressString(JSON.stringify(fullDatasetMiniSearch.toJSON()));
+        localStorage.setItem(INDEX_KEY, compressedIndex);
+        console.log("Full index stored locally");
+      } catch (e) {
+        console.error("Failed to save full index locally");
+        console.error(e);
+      }
+    }
+  }, [topics, topicsDict]);
 
   useEffect(() => {
     localStorage.setItem(LANGUAGE_KEY, language);
   }, [language]);
 
+  // Handle loading and indexing dataset:
   useEffect(() => {
-    if (dataStatus === "full") return;
-
-    loadContents().then((contents) => {
-      const miniSearch = new MiniSearch(FULL_INDEX_OPTIONS);
-      miniSearch
-        .addAllAsync(
-          contents.map((content) => ({
-            ...content,
-            index: topicsDict[content.id]?.index,
-          })),
-        )
-        .then(() => {
-          try {
-            localStorage.setItem(INDEX_KEY, JSON.stringify(miniSearch.toJSON()));
-          } catch (e) {
-            console.error(e);
-          }
-          console.log("Full contents indexed");
-          setDataStatus("full");
-          setSearch(miniSearch);
-        });
-    });
+    handleIndex().catch(console.error);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
