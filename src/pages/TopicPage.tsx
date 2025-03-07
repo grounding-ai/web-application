@@ -61,7 +61,7 @@ export const TopicPage: FC = () => {
           <a
             href={`#/topic/${topic.id}/bot/critic`}
             className="border-0 bg-light-blue text-primary rounded me-3 text-decoration-none overflow-hidden"
-            style={{ height: 150 }}
+            style={{ aspectRatio: 1 }}
           >
             <div className="text-uppercase font-monospace text-center fw-bolder m-2">The skeptic bot</div>
             <img
@@ -74,7 +74,7 @@ export const TopicPage: FC = () => {
           <a
             href={`#/topic/${topic.id}/bot/potential`}
             className="border-0 bg-primary text-light-blue rounded text-decoration-none overflow-hidden"
-            style={{ height: 150 }}
+            style={{ aspectRatio: 1 }}
           >
             <div className="text-uppercase font-monospace text-center fw-bolder m-2">The advocate bot</div>
             <img
