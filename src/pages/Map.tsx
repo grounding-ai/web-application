@@ -1,6 +1,6 @@
-import cx from "classnames";
 import { fromPairs } from "lodash";
-import { FC, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
+import { LuSearchX } from "react-icons/lu";
 import { useLocation } from "react-router";
 
 import { ImageViewer } from "../components/ImageViewer.tsx";
@@ -36,6 +36,10 @@ export const Map: FC = () => {
       .flatMap(({ id }) => (topicsDict[id] ? [topicsDict[id]] : []));
   }, [language, miniSearch, query, topicsDict]);
 
+  useEffect(() => {
+    setMode("map");
+  }, [query]);
+
   return (
     <main className="bg-secondary text-white d-flex flex-column">
       <TopMenu colorClassNameSuffix="light">
@@ -43,7 +47,11 @@ export const Map: FC = () => {
       </TopMenu>
 
       <section className="flex-grow-1 position-relative">
-        <ImageViewer points={results || undefined} hidden={mode !== "map"} />
+        <ImageViewer
+          points={results || undefined}
+          hidden={mode !== "map"}
+          focus={results?.length === 1 && results[0].index === +query.trim() ? results[0] : undefined}
+        />
         {mode === "list" && results && (
           <div className="position-absolute inset-0 bg-secondary p-4 overflow-auto pt-5">
             <SearchResults query={query} results={results} />
@@ -52,21 +60,35 @@ export const Map: FC = () => {
       </section>
 
       <section className="p-4 pt-0 pb-4">
-        <div className="mb-2 mt-2">
-          <Toggle
-            id="select-results-mode"
-            className={cx("small font-monospace text-light", !query && "invisible")}
-            disabled={!query}
-            checked={mode === "list"}
-            onChange={(checked) => setMode(checked ? "list" : "map")}
-            label={translate(
-              {
-                en: "Show results in a list",
-                da: "Vis resultater i en liste",
-              },
-              language,
-            ).toUpperCase()}
-          />
+        <div className="mb-2 mt-2" style={{ height: "2em" }}>
+          {!!query && !!results?.length && (
+            <Toggle
+              id="select-results-mode"
+              className="small font-monospace text-light"
+              disabled={!query}
+              checked={mode === "list"}
+              onChange={(checked) => setMode(checked ? "list" : "map")}
+              label={translate(
+                {
+                  en: "Show results in a list",
+                  da: "Vis resultater i en liste",
+                },
+                language,
+              ).toUpperCase()}
+            />
+          )}
+          {!!query && !results?.length && (
+            <div className="small pt-1 text-truncate">
+              <LuSearchX className="me-2 fs-4" />{" "}
+              {translate(
+                {
+                  en: `No topics related to ${query.trim()}`,
+                  da: `Intet emne relateret til ${query.trim()}`,
+                },
+                language,
+              ).toUpperCase()}
+            </div>
+          )}
         </div>
         <div className="mb-2 d-none">
           <Toggle

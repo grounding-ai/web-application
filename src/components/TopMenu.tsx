@@ -21,12 +21,12 @@ export const TopMenu: FC<PropsWithChildren<{ colorClassNameSuffix: string }>> = 
         {isMenuOpen && (
           <div className="position-absolute inset-0">
             <LanguageSelect
-              className="w-auto me-1 d-inline-block align-baseline"
+              className="w-auto me-2 d-inline-block align-baseline"
               selectClassName={`border-${colorClassNameSuffix} text-${colorClassNameSuffix}`}
             />
             <a
               href="#/about"
-              className={`btn btn-sm btn-outline-${colorClassNameSuffix} d-inline-block align-baseline font-monospace text-uppercase me-1`}
+              className={`btn btn-sm btn-outline-${colorClassNameSuffix} d-inline-block align-baseline font-monospace text-uppercase me-2`}
             >
               {translate(
                 {

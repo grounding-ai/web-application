@@ -53,7 +53,7 @@ export function useSpeech(lang: Language) {
       speechSynthesis.speak(utterance);
       setIsSpeaking(true);
     },
-    [cancelSpeak, voice],
+    [cancelSpeak, lang, voice],
   );
 
   useEffect(() => {

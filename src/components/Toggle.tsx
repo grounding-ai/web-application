@@ -21,7 +21,7 @@ export const Toggle: FC<{
         onChange={(e) => onChange(e.target.checked)}
       />
       {checked ? <FaToggleOn className="fs-1" /> : <FaToggleOff className="fs-1" />}
-      {label && <span className="ms-2 small">{label}</span>}
+      {label && <span className="ms-2">{label}</span>}
     </label>
   );
 };

@@ -1,6 +1,7 @@
 import cx from "classnames";
 import { FC, useEffect, useState } from "react";
-import { AiOutlineClose, AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
+import { LuSearch } from "react-icons/lu";
 
 import { useAppContext } from "../core/context.ts";
 import { translate } from "../utils/translation.ts";
@@ -41,7 +42,7 @@ export const SearchField: FC<{
         <input
           type="string"
           autoComplete="off"
-          className={cx("form-control bg-light-blue", inputClassName)}
+          className={cx("form-control bg-light-blue fs-5", inputClassName)}
           id="topics-search"
           placeholder="Eg: 1640, Food"
           value={query}
@@ -71,7 +72,7 @@ export const SearchField: FC<{
           </button>
         )}
         <button className={cx("btn btn-light px-2", inputClassName)} type="submit">
-          <AiOutlineSearch />
+          <LuSearch />
         </button>
       </div>
     </form>

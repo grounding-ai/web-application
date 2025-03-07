@@ -1,3 +1,4 @@
+import cx from "classnames";
 import { FC, useEffect } from "react";
 import { BiSolidQuoteAltLeft, BiSolidQuoteAltRight } from "react-icons/bi";
 import { FaArrowLeft } from "react-icons/fa6";
@@ -17,6 +18,9 @@ export const TopicBotPage: FC<{ bot: Bot }> = ({ bot }) => {
 
   const textColor = bot === "critic" ? "primary" : "light-blue";
   const bgColor = bot === "critic" ? "light-blue" : "primary";
+  const botImg = bot === "critic" ? "bot-skeptic" : "bot-advocate";
+  const botHeadline = translate(topic.headline, language);
+  const botHeadlineHyphens = botHeadline.split(" ").some((str) => str.length > 12);
   const botContent = translate(topic.bots[bot], language);
   const botLanguage = topic.bots[bot][language] ? language : getOtherLanguage(language);
 
@@ -38,13 +42,13 @@ export const TopicBotPage: FC<{ bot: Bot }> = ({ bot }) => {
       <section className="m-4 pb-0 d-flex flex-row align-items-end justify-content-between mb-3">
         <div className="flex-shrink-1 pt-1" style={{ flexBasis: "65%" }}>
           <div className="mb-3">
-            <small className={`px-2 py-1 border border-${textColor} font-monospace`}>#{topic.number}</small>
+            <small className={`px-2 py-1 rounded-1 border border-${textColor} font-monospace`}>#{topic.number}</small>
           </div>
 
-          <h1 className="fw-bolder mb-0 hyphens">{translate(topic.headline, language)}</h1>
+          <h1 className={cx("fw-bolder mb-0", botHeadlineHyphens && "hyphens")}>{botHeadline}</h1>
         </div>
         <img
-          src={`${import.meta.env.BASE_URL}/bot.png`}
+          src={`${import.meta.env.BASE_URL}/${botImg}.png`}
           alt="The advocate bot"
           className="img-fluid flex-shrink-0"
           style={{ width: "35%" }}

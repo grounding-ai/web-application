@@ -21,6 +21,7 @@ const FULL_INDEX_OPTIONS = {
   idField: "id",
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const rootLoader = makeLoader(async () => {
   const topics = await loadTopics();
 

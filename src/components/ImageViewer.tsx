@@ -1,15 +1,14 @@
 import cx from "classnames";
 import { clamp, max } from "lodash";
-import { Placement, Point as SeadragonPoint, Viewer } from "openseadragon";
+import { Placement, Point, Point as SeadragonPoint, Viewer } from "openseadragon";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { FaRegCircleDot } from "react-icons/fa6";
 
 import { useAppContext } from "../core/context.ts";
-import { Topic } from "../core/types.ts";
+import { Coordinates, Topic } from "../core/types.ts";
 import { height, width } from "../map-dimensions.json";
 import { getElements, getQuadTree } from "../utils/quadtree.ts";
-import { useIsMounted } from "../utils/useIsMounted.ts";
 
 const ZOOM_BUTTON_INCR = 1.4;
 const MIN_EXPAND_ZOOM = 20;
@@ -17,11 +16,14 @@ const MIN_HIGHLIGHTS_ZOOM = 14;
 const ID = "seadragon-viewer";
 const TILE_SOURCES = `${import.meta.env.BASE_URL}/map/map.dzi`;
 
+let lastViewportState: { x: number; y: number; zoom: number } | null = null;
+
 export const ImageViewer: FC<{
   points?: Topic[];
   hidden?: boolean;
-}> = ({ points, hidden }) => {
-  const isMounted = useIsMounted();
+  focus?: Coordinates;
+}> = ({ points, hidden, focus }) => {
+  const [isFullyLoaded, setIsFullyLoaded] = useState(false);
   const overlaysRef = useRef<Map<string, { dom: HTMLDivElement; topic: Topic }>>(new Map());
   const [viewer, setViewer] = useState<Viewer | null>(null);
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
@@ -56,13 +58,17 @@ export const ImageViewer: FC<{
     const viewer = new Viewer({
       id: ID,
       tileSources: TILE_SOURCES,
-      animationTime: 0.5,
+      animationTime: 1,
       homeFillsViewer: true,
       constrainDuringPan: true,
     });
     const canvas = document.createElement("CANVAS") as HTMLCanvasElement;
     canvas.classList.add("topics-canvas");
     viewer.container.querySelector(".openseadragon-canvas")!.append(canvas);
+
+    viewer.addHandler("open", () => {
+      setIsFullyLoaded(true);
+    });
 
     setViewer(viewer);
     ctxRef.current = canvas.getContext("2d");
@@ -72,6 +78,15 @@ export const ImageViewer: FC<{
       ctxRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    if (isFullyLoaded && viewer) {
+      if (lastViewportState) {
+        viewer.viewport.panTo(new Point(lastViewportState.x, lastViewportState.y), true);
+        viewer.viewport.zoomTo(lastViewportState.zoom, undefined, true);
+      }
+    }
+  }, [isFullyLoaded, viewer]);
 
   // Handle topics rendering:
   useEffect(() => {
@@ -95,7 +110,7 @@ export const ImageViewer: FC<{
         else dom.classList.remove("expand");
       });
     });
-  }, [getTopicsOnScreen, isMounted, maxLocalDensity, points, viewer]);
+  }, [getTopicsOnScreen, isFullyLoaded, maxLocalDensity, points, viewer]);
 
   // Handle canvas rendering small points:
   useEffect(() => {
@@ -133,7 +148,28 @@ export const ImageViewer: FC<{
     return () => {
       viewer.removeHandler("viewport-change", handler);
     };
-  }, [getTopicsOnScreen, points, quadTree, isMounted, viewer]);
+  }, [getTopicsOnScreen, points, quadTree, isFullyLoaded, viewer]);
+
+  // Handle state management:
+  useEffect(() => {
+    if (!viewer) return;
+
+    const handler = () => {
+      const { viewport } = viewer;
+
+      const center = viewport.getCenter(true);
+      lastViewportState = {
+        x: center.x,
+        y: center.y,
+        zoom: viewport.getZoom(true),
+      };
+    };
+
+    viewer.addHandler("viewport-change", handler);
+    return () => {
+      viewer.removeHandler("viewport-change", handler);
+    };
+  }, [viewer]);
 
   // Handle overlays/highlights lifecycle:
   useEffect(() => {
@@ -179,7 +215,17 @@ export const ImageViewer: FC<{
         overlaysCache.delete(id);
       }
     });
-  }, [pointsToDisplay, isMounted, viewer]);
+  }, [pointsToDisplay, isFullyLoaded, viewer]);
+
+  // Handle focus:
+  useEffect(() => {
+    if (!viewer) return;
+
+    if (focus) {
+      const rect = viewer.viewport.imageToViewportRectangle(focus.x, focus.y);
+      viewer.viewport.fitBoundsWithConstraints(rect);
+    }
+  }, [focus, viewer]);
 
   return (
     <div className={cx("image-viewer", hidden && "visually-hidden")}>
@@ -187,7 +233,7 @@ export const ImageViewer: FC<{
 
       <div className="navigation p-3 d-flex flex-column">
         <button className="btn btn-primary border-white mb-1 small" onClick={() => viewer?.viewport.goHome()}>
-          <FaRegCircleDot className="small" />
+          <FaRegCircleDot />
         </button>
         <button className="btn btn-primary border-white mb-1" onClick={() => viewer?.viewport.zoomBy(ZOOM_BUTTON_INCR)}>
           <AiOutlinePlus />
