@@ -15,8 +15,8 @@ export const HomePage: FC = () => {
         <p className="display-6 fw-normal">
           {translate(
             {
-              en: "Exploring algorithms’ roles in science literature.",
-              da: "Udforskning af algoritmers roller i videnskabelig litteratur.",
+              en: "Exploring the role of algorithms in science",
+              da: "Udforskning af algoritmers rolle inden for videnskaben",
             },
             language,
           )}
@@ -27,8 +27,8 @@ export const HomePage: FC = () => {
         <a href="#/map" className="btn btn-lg btn-outline-dark mb-2">
           {translate(
             {
-              en: "Explore the digital AI Map",
-              da: "Udforsk det digitale AI-kort",
+              en: "Explore the map",
+              da: "Udforsk kortet",
             },
             language,
           )}
