@@ -21,9 +21,11 @@ export const Map: FC = () => {
   const results = useMemo(() => {
     if (!query) return null;
 
-    const fuzzy = !query.trim().match(/^\d+$/) && query.length > 4;
+    let cleanedQuery = query.trim();
+    if (cleanedQuery.match(/^\d+$/)) cleanedQuery = cleanedQuery.replace(/^0+/, "");
+    const fuzzy = !cleanedQuery.match(/^\d+$/) && query.length > 4;
     return miniSearch
-      .search(query, {
+      .search(cleanedQuery, {
         fuzzy: fuzzy,
         maxFuzzy: 2,
         combineWith: "and",
