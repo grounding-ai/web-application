@@ -1,7 +1,7 @@
 import { createHashRouter } from "react-router-dom";
 
 import { Error } from "../components/error";
-import { About } from "../pages/About.tsx";
+import { About, aboutPageLoader } from "../pages/About.tsx";
 import { HomePage } from "../pages/HomePage.tsx";
 import { Map } from "../pages/Map.tsx";
 import { Root, rootLoader } from "../pages/Root.tsx";
@@ -25,8 +25,10 @@ export function getRouter() {
           element: <Map />,
         },
         {
-          path: "/about",
+          path: "/about/:contentID",
           element: <About />,
+          errorElement: <Error />,
+          loader: aboutPageLoader,
         },
         {
           path: "/topic/:topicID",

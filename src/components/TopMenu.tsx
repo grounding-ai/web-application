@@ -2,6 +2,7 @@ import cx from "classnames";
 import { FC, PropsWithChildren, useState } from "react";
 import { AiOutlineHome } from "react-icons/ai";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 import { useAppContext } from "../core/context.ts";
 import { translate } from "../utils/translation.ts";
@@ -24,8 +25,8 @@ export const TopMenu: FC<PropsWithChildren<{ colorClassNameSuffix: string }>> = 
               className="w-auto me-2 d-inline-block align-baseline"
               selectClassName={`border-${colorClassNameSuffix} text-${colorClassNameSuffix}`}
             />
-            <a
-              href="#/about"
+            <Link
+              to="/about/project"
               className={`btn btn-sm btn-outline-${colorClassNameSuffix} d-inline-block align-baseline font-monospace text-uppercase me-2`}
             >
               {translate(
@@ -35,7 +36,7 @@ export const TopMenu: FC<PropsWithChildren<{ colorClassNameSuffix: string }>> = 
                 },
                 language,
               )}
-            </a>
+            </Link>
             <a
               href="#/"
               className={`btn btn-sm btn-outline-${colorClassNameSuffix} d-inline-block align-baseline font-monospace text-uppercase`}
