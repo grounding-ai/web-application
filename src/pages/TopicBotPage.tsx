@@ -1,4 +1,5 @@
 import cx from "classnames";
+import { DiscussionEmbed } from "disqus-react";
 import { FC, useEffect } from "react";
 import { BiSolidQuoteAltLeft, BiSolidQuoteAltRight } from "react-icons/bi";
 import { FaArrowLeft } from "react-icons/fa6";
@@ -84,6 +85,20 @@ export const TopicBotPage: FC<{ bot: Bot }> = ({ bot }) => {
           inputClassName={bot === "critic" ? "bg-light-purple border-light-purple" : "bg-light-blue border-light-blue"}
         />
       </div>
+
+      <section className="p-4 pb-0">
+        <hr className="border-1 opacity-100 my-4" />
+
+        <DiscussionEmbed
+          shortname="grounding-ai"
+          config={{
+            url: window.location.toString(),
+            identifier: `topic/${topic.id}`,
+            title: `Topic ${topic.headline}`,
+            language: "en_US",
+          }}
+        />
+      </section>
     </main>
   );
 };

@@ -1,4 +1,5 @@
 import cx from "classnames";
+import { DiscussionEmbed } from "disqus-react";
 import { FC, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import { makeLoader, useLoaderData } from "react-router-typesafe";
@@ -40,7 +41,7 @@ export const TopicPage: FC = () => {
         </button>
       </TopMenu>
 
-      <section className="p-4">
+      <section className="p-4 pb-0">
         <div className="mb-3">
           <small className="px-2 py-1 border border-light-blue color-light-blue rounded-1 font-monospace">
             #{topic.number}
@@ -88,6 +89,18 @@ export const TopicPage: FC = () => {
         <div className="font-monospace mt-5">
           <SearchField inputClassName="bg-light-blue border-light-blue" />
         </div>
+
+        <hr className="border-1 border-white opacity-100 my-4" />
+
+        <DiscussionEmbed
+          shortname="grounding-ai"
+          config={{
+            url: window.location.toString(),
+            identifier: `topic/${topic.id}`,
+            title: `Topic ${topic.headline}`,
+            language: "en_US",
+          }}
+        />
       </section>
     </main>
   );
