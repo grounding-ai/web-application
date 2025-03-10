@@ -6,7 +6,7 @@ import { makeLoader, useLoaderData } from "react-router-typesafe";
 
 import { loadContents, loadTopics } from "../core/api.ts";
 import { AppContext, AppContextType } from "../core/context.ts";
-import { DEFAULT_LANGUAGE, LANGUAGES_SET, Language, Topic } from "../core/types.ts";
+import { DEFAULT_LANGUAGE, LANGUAGES_SET, Language } from "../core/types.ts";
 import { compressString, decompressString } from "../utils/compression.ts";
 
 const LANGUAGE_KEY = `grounded-ai-language`;
@@ -37,7 +37,6 @@ export const Root: FC = () => {
     return DEFAULT_LANGUAGE;
   }, []);
   const [language, setLanguage] = useState<Language>(initialLanguage);
-  const [selectedTopic, selectTopic] = useState<Topic | null>(null);
   const [dataStatus, setDataStatus] = useState<AppContextType["dataStatus"]>("no-data");
   const [search, setSearch] = useState(new MiniSearch(TITLE_INDEX_OPTIONS));
   const handleIndex = useCallback(async () => {
@@ -118,10 +117,8 @@ export const Root: FC = () => {
         language,
         topics,
         topicsDict,
-        selectedTopic,
         // Actions:
         setLanguage,
-        selectTopic,
       }}
     >
       <Outlet />
