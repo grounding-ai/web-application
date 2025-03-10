@@ -4,7 +4,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { Outlet } from "react-router";
 import { makeLoader, useLoaderData } from "react-router-typesafe";
 
-import { loadContents, loadTopics } from "../core/api.ts";
+import { loadClusters, loadContents, loadTopics } from "../core/api.ts";
 import { AppContext, AppContextType } from "../core/context.ts";
 import { DEFAULT_LANGUAGE, LANGUAGES_SET, Language } from "../core/types.ts";
 import { compressString, decompressString } from "../utils/compression.ts";
@@ -23,13 +23,13 @@ const FULL_INDEX_OPTIONS = {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const rootLoader = makeLoader(async () => {
-  const topics = await loadTopics();
+  const [topics, clusters] = await Promise.all([loadTopics(), loadClusters()]);
 
-  return { topics };
+  return { topics, clusters };
 });
 
 export const Root: FC = () => {
-  const { topics } = useLoaderData<typeof rootLoader>();
+  const { topics, clusters } = useLoaderData<typeof rootLoader>();
   const topicsDict = useMemo(() => keyBy(topics, "id"), [topics]);
   const initialLanguage = useMemo(() => {
     const language = localStorage.getItem(LANGUAGE_KEY);
@@ -117,6 +117,7 @@ export const Root: FC = () => {
         language,
         topics,
         topicsDict,
+        clusters,
         // Actions:
         setLanguage,
       }}

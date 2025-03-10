@@ -12,7 +12,7 @@ import { useAppContext } from "../core/context.ts";
 import { translate } from "../utils/translation.ts";
 
 export const Map: FC = () => {
-  const { language, topicsDict, search: miniSearch, dataStatus } = useAppContext();
+  const { language, topicsDict, search: miniSearch, dataStatus, clusters } = useAppContext();
   const [mode, setMode] = useState<"map" | "list">("map");
   const [showClusters, setShowClusters] = useState(false);
   const { search } = useLocation();
@@ -51,6 +51,7 @@ export const Map: FC = () => {
       <section className="flex-grow-1 position-relative">
         <ImageViewer
           points={results || undefined}
+          clusters={clusters}
           hidden={mode !== "map"}
           focus={results?.length === 1 && results[0].index === +query.trim() ? results[0] : undefined}
         />

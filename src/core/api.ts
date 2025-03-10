@@ -1,6 +1,28 @@
 import { parse } from "papaparse";
 
-import { Topic, TopicContent } from "./types";
+import { Cluster, Topic, TopicContent } from "./types";
+
+type CSVClusterKey = "cluster label" | "X" | "Y";
+type CSVCluster = Record<CSVClusterKey, string>;
+export async function loadClusters(): Promise<Cluster[]> {
+  const res = await fetch(`${import.meta.env.BASE_URL}/clusters.csv`);
+  const csv = await res.text();
+  const { data } = parse<CSVCluster>(csv, {
+    header: true,
+  });
+
+  return data.flatMap((row) =>
+    row["cluster label"]
+      ? [
+          {
+            label: row["cluster label"].trim(),
+            x: +row.X,
+            y: +row.Y,
+          },
+        ]
+      : [],
+  );
+}
 
 type CSVTopicKey = "id" | "label" | "number" | "X" | "Y" | "local_density";
 type CSVTopic = Record<CSVTopicKey, string>;

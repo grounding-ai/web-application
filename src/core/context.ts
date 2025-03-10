@@ -1,12 +1,13 @@
 import MiniSearch from "minisearch";
 import { createContext, useContext } from "react";
 
-import { Language, Topic } from "./types";
+import { Cluster, Language, Topic } from "./types";
 
 export type AppContextType = {
   dataStatus: "no-data" | "titles-only" | "full";
   search: MiniSearch;
   language: Language;
+  clusters: Cluster[];
   topics: Topic[];
   topicsDict: Record<string, Topic>;
 

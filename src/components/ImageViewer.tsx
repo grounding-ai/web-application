@@ -6,7 +6,7 @@ import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { FaRegCircleDot } from "react-icons/fa6";
 
 import { useAppContext } from "../core/context.ts";
-import { Coordinates, Topic } from "../core/types.ts";
+import { Cluster, Coordinates, Topic } from "../core/types.ts";
 import { height, width } from "../map-dimensions.json";
 import { getElements, getQuadTree } from "../utils/quadtree.ts";
 
@@ -20,6 +20,7 @@ let lastViewportState: { x: number; y: number; zoom: number } | null = null;
 
 export const ImageViewer: FC<{
   points?: Topic[];
+  clusters?: Cluster[];
   hidden?: boolean;
   focus?: Coordinates;
 }> = ({ points, hidden, focus }) => {
