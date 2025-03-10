@@ -79,6 +79,7 @@ export const ImageViewer: FC<{
     };
   }, []);
 
+  // Handle viewport transitions:
   useEffect(() => {
     if (isFullyLoaded && viewer) {
       if (lastViewportState) {
@@ -116,16 +117,17 @@ export const ImageViewer: FC<{
   useEffect(() => {
     if (!viewer || points) return;
 
-    const handler = () => {
-      const ctx = ctxRef.current;
-      const { viewport } = viewer;
-      if (!ctx) return;
+    const ctx = ctxRef.current;
+    const { viewport } = viewer;
+    if (!ctx) return;
 
+    const dpr = window.devicePixelRatio;
+    const canvas = ctx.canvas;
+    const canvasWidth = viewer.container.offsetWidth * dpr;
+    const canvasHeight = viewer.container.offsetHeight * dpr;
+
+    const handler = () => {
       // Resize and clear canvas:
-      const dpr = window.devicePixelRatio;
-      const canvas = ctx.canvas;
-      const canvasWidth = viewer.container.offsetWidth * dpr;
-      const canvasHeight = viewer.container.offsetHeight * dpr;
       canvas.setAttribute("width", canvasWidth + "px");
       canvas.setAttribute("height", canvasHeight + "px");
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -144,8 +146,10 @@ export const ImageViewer: FC<{
       }
     };
 
+    handler();
     viewer.addHandler("viewport-change", handler);
     return () => {
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
       viewer.removeHandler("viewport-change", handler);
     };
   }, [getTopicsOnScreen, points, quadTree, isFullyLoaded, viewer]);
@@ -165,6 +169,7 @@ export const ImageViewer: FC<{
       };
     };
 
+    handler();
     viewer.addHandler("viewport-change", handler);
     return () => {
       viewer.removeHandler("viewport-change", handler);
