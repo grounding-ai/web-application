@@ -55,4 +55,24 @@
       z-index: 2;
     }
   }
+
+  .overlay-cluster {
+    font-size: 0.7em;
+    transform: translate(-50%);
+    user-select: none;
+
+    .cluster-label {
+      position: absolute;
+      top: 0;
+      white-space: nowrap;
+      text-shadow:
+        white 0 0 3px,
+        white 0 0 6px,
+        white 0 0 10px;
+
+      span {
+        line-height: 0.7em;
+      }
+    }
+  }
 }

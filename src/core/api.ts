@@ -2,7 +2,7 @@ import { parse } from "papaparse";
 
 import { Cluster, Topic, TopicContent } from "./types";
 
-type CSVClusterKey = "cluster label" | "X" | "Y";
+type CSVClusterKey = "cluster label" | "danish label" | "X" | "Y";
 type CSVCluster = Record<CSVClusterKey, string>;
 export async function loadClusters(): Promise<Cluster[]> {
   const res = await fetch(`${import.meta.env.BASE_URL}/clusters.csv`);
@@ -11,11 +11,15 @@ export async function loadClusters(): Promise<Cluster[]> {
     header: true,
   });
 
-  return data.flatMap((row) =>
+  return data.flatMap((row, i) =>
     row["cluster label"]
       ? [
           {
-            label: row["cluster label"].trim(),
+            id: "" + i,
+            label: {
+              en: row["cluster label"].trim(),
+              da: row["danish label"].trim(),
+            },
             x: +row.X,
             y: +row.Y,
           },

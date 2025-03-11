@@ -9,10 +9,12 @@ import { useAppContext } from "../core/context.ts";
 import { Cluster, Coordinates, Topic } from "../core/types.ts";
 import { height, width } from "../map-dimensions.json";
 import { getElements, getQuadTree } from "../utils/quadtree.ts";
+import { getOtherLanguage, translate } from "../utils/translation.ts";
 
 const ZOOM_BUTTON_INCR = 1.4;
 const MIN_EXPAND_ZOOM = 20;
 const MIN_HIGHLIGHTS_ZOOM = 14;
+const MAX_CLUSTERS_ZOOM = 10;
 const ID = "seadragon-viewer";
 const TILE_SOURCES = `${import.meta.env.BASE_URL}/map/map.dzi`;
 
@@ -23,9 +25,11 @@ export const ImageViewer: FC<{
   clusters?: Cluster[];
   hidden?: boolean;
   focus?: Coordinates;
-}> = ({ points, hidden, focus }) => {
+}> = ({ points, clusters = [], hidden, focus }) => {
+  const { language } = useAppContext();
   const [isFullyLoaded, setIsFullyLoaded] = useState(false);
-  const overlaysRef = useRef<Map<string, { dom: HTMLDivElement; topic: Topic }>>(new Map());
+  const topicOverlaysRef = useRef<Map<string, { dom: HTMLDivElement; topic: Topic }>>(new Map());
+  const clusterOverlaysRef = useRef<Map<string, { dom: HTMLDivElement; cluster: Cluster }>>(new Map());
   const [viewer, setViewer] = useState<Viewer | null>(null);
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
 
@@ -90,9 +94,9 @@ export const ImageViewer: FC<{
     }
   }, [isFullyLoaded, viewer]);
 
-  // Handle topics rendering:
+  // Handle topics and clusters rendering:
   useEffect(() => {
-    if (!viewer || points) return;
+    if (!viewer) return;
 
     const getTopicSpecificZoom = (localDensity: number, zoom: number) => zoom - (localDensity / maxLocalDensity) * 80;
     viewer.addHandler("viewport-change", () => {
@@ -107,12 +111,17 @@ export const ImageViewer: FC<{
         setHighlightedTopics(null);
       }
 
-      overlaysRef.current.forEach(({ dom, topic: { localDensity } }) => {
+      topicOverlaysRef.current.forEach(({ dom, topic: { localDensity } }) => {
         if (getTopicSpecificZoom(localDensity, zoom) > MIN_EXPAND_ZOOM) dom.classList.add("expand");
         else dom.classList.remove("expand");
       });
+
+      const opacity = clamp((zoom - MIN_HIGHLIGHTS_ZOOM) / (MAX_CLUSTERS_ZOOM - MIN_HIGHLIGHTS_ZOOM), 0, 1);
+      clusterOverlaysRef.current.forEach(({ dom }) => {
+        dom.style.opacity = opacity + "";
+      });
     });
-  }, [getTopicsOnScreen, isFullyLoaded, maxLocalDensity, points, viewer]);
+  }, [getTopicsOnScreen, isFullyLoaded, maxLocalDensity, viewer]);
 
   // Handle canvas rendering small points:
   useEffect(() => {
@@ -181,13 +190,13 @@ export const ImageViewer: FC<{
   useEffect(() => {
     if (!viewer) return;
 
-    const overlaysCache = overlaysRef.current;
+    const topicOverlaysCache = topicOverlaysRef.current;
 
     // Handle current overlays:
     const currentOverlays = new Set<string>();
     pointsToDisplay.forEach((topic) => {
       currentOverlays.add(topic.id);
-      if (overlaysCache.has(topic.id)) return;
+      if (topicOverlaysCache.has(topic.id)) return;
 
       const dom = document.createElement("DIV") as HTMLDivElement;
       dom.addEventListener(
@@ -211,17 +220,56 @@ export const ImageViewer: FC<{
 
       if (viewer.viewport.getZoom(true) > MIN_EXPAND_ZOOM) dom.classList.add("expand");
       viewer.addOverlay(dom, new SeadragonPoint(topic.x / width, topic.y / height), Placement.LEFT);
-      overlaysCache.set(topic.id, { dom, topic });
+      topicOverlaysCache.set(topic.id, { dom, topic });
     });
 
     // Remove out-of-bound overlays:
-    overlaysCache.forEach(({ dom }, id) => {
+    topicOverlaysCache.forEach(({ dom }, id) => {
       if (!currentOverlays.has(id)) {
         viewer.removeOverlay(dom);
-        overlaysCache.delete(id);
+        topicOverlaysCache.delete(id);
       }
     });
   }, [pointsToDisplay, isFullyLoaded, viewer]);
+
+  // Handle clusters rendering:
+  useEffect(() => {
+    if (!viewer) return;
+
+    const clusterOverlaysCache = clusterOverlaysRef.current;
+
+    // Handle current overlays:
+    const currentOverlays = new Set<string>();
+    clusters.forEach((cluster) => {
+      const { x, y, label, id } = cluster;
+      currentOverlays.add(id);
+      if (clusterOverlaysCache.has(id)) {
+        viewer.removeOverlay(clusterOverlaysCache.get(id)!.dom);
+      }
+
+      const dom = document.createElement("DIV") as HTMLDivElement;
+      dom.innerHTML = `
+        <span
+          class="cluster-label font-monospace position-relative w-auto h-auto text-primary d-flex flex-column align-items-center"
+        >
+          <strong>${translate(label, language)}</strong>
+          <span>${translate(label, getOtherLanguage(language))}</span>
+        </span>
+      `;
+      dom.classList.add("overlay-cluster");
+
+      viewer.addOverlay(dom, new SeadragonPoint(x / width, y / height), Placement.LEFT);
+      clusterOverlaysCache.set(id, { dom, cluster });
+    });
+
+    // Remove out-of-bound overlays:
+    clusterOverlaysCache.forEach(({ dom }, id) => {
+      if (!currentOverlays.has(id)) {
+        viewer.removeOverlay(dom);
+        clusterOverlaysCache.delete(id);
+      }
+    });
+  }, [isFullyLoaded, viewer, clusters, language]);
 
   // Handle focus:
   useEffect(() => {
