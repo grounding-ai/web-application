@@ -11,8 +11,6 @@ body {
 #root {
   width: 100%;
   height: 100%;
-  max-width: 500px;
-  max-height: 1000px;
   overflow: hidden;
   position: relative;
 
@@ -21,10 +19,4 @@ body {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-}
-
-main {
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
 }

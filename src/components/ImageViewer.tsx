@@ -1,4 +1,3 @@
-import cx from "classnames";
 import { clamp, max } from "lodash";
 import { Placement, Point, Point as SeadragonPoint, Viewer } from "openseadragon";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -23,9 +22,8 @@ let lastViewportState: { x: number; y: number; zoom: number } | null = null;
 export const ImageViewer: FC<{
   points?: Topic[];
   clusters?: Cluster[];
-  hidden?: boolean;
   focus?: Coordinates;
-}> = ({ points, clusters = [], hidden, focus }) => {
+}> = ({ points, clusters = [], focus }) => {
   const { language } = useAppContext();
   const [isFullyLoaded, setIsFullyLoaded] = useState(false);
   const topicOverlaysRef = useRef<Map<string, { dom: HTMLDivElement; topic: Topic }>>(new Map());
@@ -203,7 +201,8 @@ export const ImageViewer: FC<{
         "click",
         (e) => {
           e.stopPropagation();
-          viewer.destroy();
+          const rect = viewer.viewport.imageToViewportRectangle(topic.x, topic.y);
+          viewer.viewport.fitBoundsWithConstraints(rect);
         },
         true,
       );
@@ -282,7 +281,7 @@ export const ImageViewer: FC<{
   }, [focus, viewer]);
 
   return (
-    <div className={cx("image-viewer", hidden && "visually-hidden")}>
+    <div className="image-viewer">
       <div id={ID} className="openseadragon-wrapper" />
 
       <div className="navigation p-3 d-flex flex-column">

@@ -24,6 +24,7 @@ export const SearchField: FC<{
 
   return (
     <form
+      className="font-monospace"
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit(query);

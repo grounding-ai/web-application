@@ -1,0 +1,62 @@
+import cx from "classnames";
+import { FC } from "react";
+
+import { useAppContext } from "../core/context.ts";
+import { TopicContent } from "../core/types.ts";
+import { translate } from "../utils/translation.ts";
+import { MapThumbnail } from "./MapThumbnail.tsx";
+
+export const TopicContentComponent: FC<{ topic: TopicContent }> = ({ topic }) => {
+  const { language, topicsDict } = useAppContext();
+  const topicPoint = topicsDict[topic.id];
+  const topicHeadline = translate(topic.headline, language);
+  const topicHeadlineHyphens = topicHeadline.split(" ").some((str) => str.length > 14);
+
+  return (
+    <section>
+      <div className="mb-3">
+        <small className="px-2 py-1 border border-light-blue color-light-blue rounded-1 font-monospace">
+          #{topic.number}
+        </small>
+      </div>
+
+      <h1 className={cx("fw-bolder mb-3", topicHeadlineHyphens && "hyphens")}>{topicHeadline}</h1>
+
+      <MapThumbnail className="w-100 mb-3" points={[topicPoint]} />
+
+      <p className="text-content mb-5">{translate(topic.content, language)}</p>
+
+      <hr className="border-1 border-white opacity-100" />
+
+      <h2 className="fw-bolder">Get some synthetic opinions on this topic</h2>
+
+      <section className="d-flex flex-row justify-content-between my-4">
+        <a
+          href={`#/topic/${topic.id}/bot/critic`}
+          className="border-0 bg-light-blue text-primary rounded me-3 text-decoration-none overflow-hidden"
+          style={{ aspectRatio: 1 }}
+        >
+          <div className="text-uppercase font-monospace text-center fw-bolder m-2">The skeptic bot</div>
+          <img
+            src={`${import.meta.env.BASE_URL}/bot-skeptic.png`}
+            alt="The skeptic bot"
+            className="img-fluid w-100"
+            style={{ transform: "scale(-1,1)" }}
+          />
+        </a>
+        <a
+          href={`#/topic/${topic.id}/bot/potential`}
+          className="border-0 bg-primary text-light-blue rounded text-decoration-none overflow-hidden"
+          style={{ aspectRatio: 1 }}
+        >
+          <div className="text-uppercase font-monospace text-center fw-bolder m-2">The advocate bot</div>
+          <img
+            src={`${import.meta.env.BASE_URL}/bot-advocate.png`}
+            alt="The advocate bot"
+            className="img-fluid w-100"
+          />
+        </a>
+      </section>
+    </section>
+  );
+};

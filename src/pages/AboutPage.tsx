@@ -211,7 +211,7 @@ export const aboutPageLoader = makeLoader(async ({ params: { contentID } }) => {
   return { content: CONTENTS_DICT[contentID] };
 });
 
-export const About: FC = () => {
+export const AboutPage: FC = () => {
   const { content } = useLoaderData<typeof aboutPageLoader>();
   const navigate = useNavigate();
 

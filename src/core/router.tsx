@@ -1,12 +1,10 @@
 import { createHashRouter } from "react-router-dom";
 
 import { Error } from "../components/error";
-import { About, aboutPageLoader } from "../pages/About.tsx";
+import { AboutPage, aboutPageLoader } from "../pages/AboutPage.tsx";
+import { AppPage } from "../pages/AppPage.tsx";
 import { HomePage } from "../pages/HomePage.tsx";
-import { Map } from "../pages/Map.tsx";
 import { Root, rootLoader } from "../pages/Root.tsx";
-import { TopicBotPage } from "../pages/TopicBotPage.tsx";
-import { TopicPage, topicPageLoader } from "../pages/TopicPage.tsx";
 
 export function getRouter() {
   return createHashRouter([
@@ -22,31 +20,28 @@ export function getRouter() {
         },
         {
           path: "/map",
-          element: <Map />,
+          element: <AppPage pageType="search" />,
         },
         {
           path: "/about/:contentID",
-          element: <About />,
+          element: <AboutPage />,
           errorElement: <Error />,
           loader: aboutPageLoader,
         },
         {
           path: "/topic/:topicID",
-          element: <TopicPage />,
+          element: <AppPage pageType="topic" />,
           errorElement: <Error />,
-          loader: topicPageLoader,
         },
         {
           path: "/topic/:topicID/bot/critic",
-          element: <TopicBotPage bot="critic" />,
+          element: <AppPage pageType="topic" bot="critic" />,
           errorElement: <Error />,
-          loader: topicPageLoader,
         },
         {
           path: "/topic/:topicID/bot/potential",
-          element: <TopicBotPage bot="potential" />,
+          element: <AppPage pageType="topic" bot="potential" />,
           errorElement: <Error />,
-          loader: topicPageLoader,
         },
       ],
     },
