@@ -19,28 +19,23 @@ export function getRouter() {
           element: <HomePage />,
         },
         {
-          path: "/map",
-          element: <AppPage pageType="search" />,
-        },
-        {
           path: "/about/:contentID",
           element: <AboutPage />,
           errorElement: <Error />,
           loader: aboutPageLoader,
         },
         {
-          path: "/topic/:topicID",
-          element: <AppPage pageType="topic" />,
-          errorElement: <Error />,
-        },
-        {
-          path: "/topic/:topicID/bot/critic",
-          element: <AppPage pageType="topic" bot="critic" />,
-          errorElement: <Error />,
-        },
-        {
-          path: "/topic/:topicID/bot/potential",
-          element: <AppPage pageType="topic" bot="potential" />,
+          /**
+           * To prevent remounting of the map on desktop, all pages that have the map must be in the single same path...
+           * It's smelly, but I couldn't find a better way. Here are the paths that this "/*" represent (and check
+           * AppPage to see how we read the wildcard):
+           * - map
+           * - topic/:topicID
+           * - topic/:topicID/bot/critic
+           * - topic/:topicID/bot/potential
+           */
+          path: "/*",
+          element: <AppPage />,
           errorElement: <Error />,
         },
       ],

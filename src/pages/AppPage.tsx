@@ -16,17 +16,44 @@ import { TopicBotContent } from "../components/TopicBotContent.tsx";
 import { TopicContentComponent } from "../components/TopicContent.tsx";
 import { loadTopicContent } from "../core/api.ts";
 import { useAppContext } from "../core/context.ts";
-import { Bot } from "../core/types.ts";
+import { BOTS_SET, Bot } from "../core/types.ts";
 import { translate } from "../utils/translation.ts";
 
-export const AppPage: FC<{ pageType: "search" | "topic"; bot?: Bot }> = ({ pageType, bot: inputBot }) => {
+export const AppPage: FC = () => {
   const { language, topicsDict, search: miniSearch, dataStatus, clusters } = useAppContext();
 
   // URL inputs:
-  const { topicID: inputTopicId } = useParams();
+  const splat = useParams()["*"];
   const { search } = useLocation();
   const fullQuery = useMemo(() => fromPairs([...new URLSearchParams(search.replace(/^\?/, ""))]), [search]);
   const inputQuery = fullQuery.q || "";
+  const { pageType, inputBot, inputTopicId } = useMemo(() => {
+    const [pageType, inputTopicId, botMarker, inputBot] = (splat || "").split("/");
+    switch (pageType) {
+      case "map":
+        return {
+          pageType: "search",
+          inputBot: null,
+          inputTopicId: null,
+        };
+      case "topic":
+        if (botMarker === "bot" && BOTS_SET.has(inputBot)) {
+          return {
+            pageType: "topic",
+            inputBot: inputBot as Bot,
+            inputTopicId: inputTopicId as string,
+          };
+        } else {
+          return {
+            pageType: "topic",
+            inputBot: null,
+            inputTopicId: inputTopicId as string,
+          };
+        }
+      default:
+        throw new Error(`Path /${splat} not recognized.`);
+    }
+  }, [splat]);
 
   // Common state:
   const [state, setState] = useState<
@@ -213,7 +240,9 @@ export const AppPage: FC<{ pageType: "search" | "topic"; bot?: Bot }> = ({ pageT
                 config={{
                   url: window.location.toString(),
                   identifier: params.bot ? `topic/${topic.id}/bot/${params.bot}` : `topic/${topic.id}`,
-                  title: `Topic ${topic.headline}`,
+                  title:
+                    `Topic ${translate(topic.headline, language)}` +
+                    (params.bot ? ` - ${params.bot === "critic" ? "The skeptic bot" : "The advocate bot"}` : ""),
                   language: language === "en" ? "en_US" : "da_DK",
                 }}
               />

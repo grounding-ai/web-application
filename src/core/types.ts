@@ -13,6 +13,7 @@ export const VOICES_LANGUAGES: Record<Language, string> = {
 };
 
 export const BOTS = ["critic", "potential"] as const;
+export const BOTS_SET = new Set<string>(BOTS);
 export type Bot = (typeof BOTS)[number];
 
 export type Coordinates = { x: number; y: number };
