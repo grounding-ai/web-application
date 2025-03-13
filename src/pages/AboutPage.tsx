@@ -3,6 +3,7 @@ import { keyBy } from "lodash";
 import { FC, useEffect } from "react";
 import { FaAngleDown } from "react-icons/fa6";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 import { makeLoader, useLoaderData } from "react-router-typesafe";
 
 import { TopMenu } from "../components/TopMenu.tsx";
@@ -14,8 +15,8 @@ const CONTENTS = [
     textColor: "primary",
     title: "About the project",
     content: (
-      <section className="p-4">
-        <h2 className="fw-bolder mb-4">What are algorithms doing in science?</h2>
+      <section>
+        <h2 className="fw-bolder mb-4 display-4">What are algorithms doing in science?</h2>
         <p>
           We talk a lot about AI—often in terms of the spectacular, revolutionizing, and disruptive aspects of this
           technology. But beyond the controversies, AI is already embedded in the mundane, shaping decisions and
@@ -34,7 +35,7 @@ const CONTENTS = [
           penatibus arcu facilisis viverra nec enim vulputate. Ultricies cras massa tellus quam.
         </p>
 
-        <h2 className="fw-bolder mt-5 mb-4">AI is everywhere and no-where</h2>
+        <h2 className="fw-bolder mt-5 mb-4 display-4">AI is everywhere and no-where</h2>
         <p>
           The AI debate is often focused on particular applications, such as ChatGPT, or concerns about whether AI is
           fair and reliable. But in reality, AI already plays a role across almost every aspect of our lives and
@@ -54,11 +55,11 @@ const CONTENTS = [
         </p>
 
         <figure>
-          <img src={`${import.meta.env.BASE_URL}/about/clusters-map.png`} className="w-100" alt="" />
+          <img src={`${import.meta.env.BASE_URL}/about/clusters-map.png`} alt="" />
           <figcaption className="font-monospace my-2">The map of AI with the different thematic clusters</figcaption>
         </figure>
 
-        <h2 className="fw-bolder mt-5 mb-4">Physicalizing Data: An Experiment in Public Engagement</h2>
+        <h2 className="fw-bolder mt-5 mb-4 display-4">Physicalizing Data: An Experiment in Public Engagement</h2>
         <p>
           Lorem ipsum dolor sit amet consectetur. Maecenas aenean ipsum a ut iaculis ullamcorper lacus tellus justo. Ut
           scelerisque malesuada faucibus nibh integer hendrerit. Fermentum id proin mauris tempor. Sed bibendum
@@ -70,9 +71,9 @@ const CONTENTS = [
           eget volutpat adipiscing. Urna vitae sit nec vestibulum amet pellentesque velit{" "}
         </p>
 
-        <figure>
-          <img src={`${import.meta.env.BASE_URL}/about/floor-1.png`} className="w-100 mb-3" alt="" />
-          <img src={`${import.meta.env.BASE_URL}/about/floor-2.png`} className="w-100" alt="" />
+        <figure className="images-multiple images-2">
+          <img src={`${import.meta.env.BASE_URL}/about/floor-1.png`} alt="" />
+          <img src={`${import.meta.env.BASE_URL}/about/floor-2.png`} alt="" />
           <figcaption className="font-monospace my-2">
             Pictures of the event in Ballerup Library where the large map was exhibited
           </figcaption>
@@ -87,15 +88,15 @@ const CONTENTS = [
     title: "Methodology",
     content: (
       <>
-        <section className="p-4">
-          <h2 className="fw-bolder mb-4">How was this map made?</h2>
+        <section>
+          <h2 className="fw-bolder mb-4 display-4">How was this map made?</h2>
           <p>
             This map would not have been possible without the assistance of generative AI. If you explore the map and
             look for titles like "language processing", "text clustering algorithms", "word embedding advancements", or
             "text summarization advancements", you can find the methods we used.
           </p>
 
-          <h2 className="fw-bolder mt-5 mb-4">1. An impossible task</h2>
+          <h2 className="fw-bolder mt-5 mb-4 display-4">1. An impossible task</h2>
           <p>
             Imagine that you had to read, categorize, and summarize two million highly technical scientific papers about
             AI, algorithms, and machine learning. How would you do it? How long would it take?
@@ -103,12 +104,11 @@ const CONTENTS = [
           <figure>
             <img
               src={`${import.meta.env.BASE_URL}/about/methodology-1.png`}
-              className="w-100 px-4"
               alt="An illustration showing robots on a huge pile of papers, simingly discussing with a human"
             />
           </figure>
 
-          <h2 className="fw-bolder mt-5 mb-4">2. Finding similar meanings</h2>
+          <h2 className="fw-bolder mt-5 mb-4 display-4">2. Finding similar meanings</h2>
           <p>
             To map the papers in relation to each other we used a language model to calculate to what extent different
             papers have the same meaning. That is called the semantic distance of the papers. It’s like measuring how
@@ -121,12 +121,11 @@ const CONTENTS = [
           <figure>
             <img
               src={`${import.meta.env.BASE_URL}/about/methodology-2.png`}
-              className="w-100 px-4"
               alt='An illustration with the text "Model: SPECTER"'
             />
           </figure>
 
-          <h2 className="fw-bolder mt-5 mb-4">3. Papers must be grouped to be summarized</h2>
+          <h2 className="fw-bolder mt-5 mb-4 display-4">3. Papers must be grouped to be summarized</h2>
           <p>
             Next step was to group the papers in terms of how they use AI and machine learning. For this we used an
             algorithm for community detection, that was provided with the semantic distances of the papers that the
@@ -139,12 +138,11 @@ const CONTENTS = [
           <figure>
             <img
               src={`${import.meta.env.BASE_URL}/about/methodology-3.png`}
-              className="w-100 px-4"
               alt='An illustration of the papers grouping, with the text "Algorithms: Density-based spatial clustering (like DBSCAN)"'
             />
           </figure>
 
-          <h2 className="fw-bolder mt-5 mb-4">4. Summarizing the groups</h2>
+          <h2 className="fw-bolder mt-5 mb-4 display-4">4. Summarizing the groups</h2>
           <p>
             We used a language model to calculate the semantic distance between all paper abstracts — that is, how
             similar their meanings are. The model assigns each abstract a score across hundreds of parameters, creating
@@ -155,12 +153,11 @@ const CONTENTS = [
           <figure>
             <img
               src={`${import.meta.env.BASE_URL}/about/methodology-4.png`}
-              className="w-100 px-4"
               alt='An illustration of the groups summarization, using the topic "AI-Driven Education" as an example'
             />
           </figure>
 
-          <h2 className="fw-bolder mt-5 mb-4">5. Visualizing on a flat surface</h2>
+          <h2 className="fw-bolder mt-5 mb-4 display-4">5. Visualizing on a flat surface</h2>
           <p>
             Last step was to reduce the multidimensional semantic space into a flat two dimensional space. For this we
             used two algorithms. One that reduced the number of dimensions into only two dimensions and one that
@@ -171,7 +168,6 @@ const CONTENTS = [
           <figure>
             <img
               src={`${import.meta.env.BASE_URL}/about/methodology-5.png`}
-              className="w-100"
               alt='An illustration of the flat map surface, with the text "Algorithms: Dimensionality reduction (like t-SNE or UMAP) and force-driven layout (like ForceAtlas2)"'
             />
           </figure>
@@ -180,13 +176,12 @@ const CONTENTS = [
         <figure className="pe-5">
           <img
             src={`${import.meta.env.BASE_URL}/about/robot-message.png`}
-            className="w-100"
             alt='A robot saying "Why have we been humanized like this? We do not have personality. We are just machines...'
           />
         </figure>
 
-        <section className="p-4">
-          <h2 className="fw-bolder mt-5 mb-4">Experimenting with bots for audience engagement</h2>
+        <section>
+          <h2 className="fw-bolder mt-5 mb-4 display-4">Experimenting with bots for audience engagement</h2>
           <p>
             Lorem ipsum dolor sit amet consectetur. Maecenas aenean ipsum a ut iaculis ullamcorper lacus tellus justo.
             Ut scelerisque malesuada faucibus nibh integer hendrerit. Fermentum id proin mauris tempor. Sed bibendum
@@ -216,29 +211,28 @@ export const AboutPage: FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("SCROLL TO TOP");
     window.scrollTo({
       top: 0,
       behavior: "instant",
     });
   }, [content.id]);
 
-  console.log("COLOR", content.textColor);
-
   return (
-    <main
+    <div
       className={cx(
-        "d-flex flex-column",
+        "about",
         content.bgColor && `bg-${content.bgColor}`,
         content.textColor && `text-${content.textColor}`,
       )}
     >
-      <TopMenu colorClassNameSuffix={content.textColor}>
-        <h1 className="fs-5 mt-1">Grounding AI</h1>
-      </TopMenu>
+      <header>
+        <TopMenu colorClassNameSuffix={content.textColor}>
+          <h1 className="fs-5 mt-1">Grounding AI</h1>
+        </TopMenu>
+      </header>
 
-      <section className="p-4">
-        <div className="position-relative d-inline-block mb-4">
+      <aside>
+        <div className="select-wrapper">
           <select
             className={cx(
               "form-select form-select-sm z-1 position-relative",
@@ -258,9 +252,21 @@ export const AboutPage: FC = () => {
             <FaAngleDown />
           </div>
         </div>
-      </section>
 
-      {content.content}
-    </main>
+        <ul className="list-wrapper list-unstyled">
+          {CONTENTS.map(({ id, title }) => (
+            <li key={id} className={cx(id === content.id && "active")}>
+              {id === content.id ? (
+                <strong className="active">{title.toUpperCase()}</strong>
+              ) : (
+                <Link to={`/about/${id}`}>{title.toUpperCase()}</Link>
+              )}
+            </li>
+          ))}
+        </ul>
+      </aside>
+
+      <main>{content.content}</main>
+    </div>
   );
 };
