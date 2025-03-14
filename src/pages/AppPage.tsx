@@ -238,7 +238,7 @@ export const AppPage: FC = () => {
                 key={params.bot ? `topic/${topic.id}/bot/${params.bot}` : `topic/${topic.id}`}
                 shortname="grounding-ai"
                 config={{
-                  url: window.location.toString(),
+                  url: window.location.toString().replace("#", ""),
                   identifier: params.bot ? `topic/${topic.id}/bot/${params.bot}` : `topic/${topic.id}`,
                   title:
                     `Topic ${translate(topic.headline, language)}` +
