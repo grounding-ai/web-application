@@ -6,6 +6,7 @@ import { rimraf } from "rimraf";
 import { fileURLToPath } from "url";
 
 import { TopicContent } from "../src/core/types";
+import { SummariesColumn } from "./input-type.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -24,30 +25,40 @@ async function main() {
     {},
   );
 
-  const { data: summariesData } = Papa.parse<
-    Record<"id" | "headline" | "text" | "Danish_Translation" | "english_bot_critic" | "english_bot_potential", string>
-  >(await readFile(path.resolve(__dirname, "../resources/summaries.csv"), "utf8"), { header: true });
+  const { data: summariesData } = Papa.parse<Record<SummariesColumn, string>>(
+    await readFile(path.resolve(__dirname, "../resources/summaries.csv"), "utf8"),
+    { header: true },
+  );
 
   const topics: TopicContent[] = summariesData.map(
-    ({ id, headline, text, Danish_Translation, english_bot_critic, english_bot_potential }) => ({
+    ({
+      id,
+      headline_v2,
+      text,
+      danish_Translation,
+      critic_bot_english,
+      optimist_bot_english,
+      critic_bot_danish,
+      optimist_bot_danish,
+    }) => ({
       id,
       number: idsToNumbers[id],
       headline: {
-        en: headline,
-        da: ((Danish_Translation || "").match(/^[^:]+/) || [null])[0],
+        en: headline_v2,
+        da: null,
       },
       content: {
         en: text,
-        da: Danish_Translation,
+        da: danish_Translation,
       },
       bots: {
         critic: {
-          en: english_bot_critic || null,
-          da: null,
+          en: critic_bot_english || null,
+          da: critic_bot_danish || null,
         },
         potential: {
-          en: english_bot_potential || null,
-          da: null,
+          en: optimist_bot_english || null,
+          da: optimist_bot_danish || null,
         },
       },
     }),
@@ -55,8 +66,7 @@ async function main() {
 
   for (let i = 0; i < topics.length; i++) {
     const topic = topics[i];
-    if (topic.id)
-      await writeFile(path.join(OUTPUT_DIR, `${topic.id}.json`), JSON.stringify(topic), "utf8");
+    if (topic.id) await writeFile(path.join(OUTPUT_DIR, `${topic.id}.json`), JSON.stringify(topic), "utf8");
   }
 }
 
