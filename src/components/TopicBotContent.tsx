@@ -19,7 +19,7 @@ export const TopicBotContent: FC<{ topic: TopicContent; bot: Bot }> = ({ topic, 
 
   return (
     <>
-      <section className="d-flex flex-row align-items-end justify-content-between mb-3">
+      <section className="d-flex flex-row align-items-end justify-content-between mb-5">
         <div className="flex-shrink-1 pt-1" style={{ flexBasis: "65%" }}>
           <div className="mb-3">
             <small className={`px-2 py-1 rounded-1 border border-${textColor} font-monospace`}>#{topic.number}</small>
@@ -36,7 +36,7 @@ export const TopicBotContent: FC<{ topic: TopicContent; bot: Bot }> = ({ topic, 
       </section>
 
       {botContent && (
-        <section>
+        <section className="mb-5">
           <TextReader text={botContent} textLanguage={botLanguage} className={`btn-${textColor} w-100`} />
         </section>
       )}
