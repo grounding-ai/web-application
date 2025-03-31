@@ -10,6 +10,7 @@ import { TopMenu } from "../components/TopMenu.tsx";
 import { Methodology } from "../components/aboutContents/Methodology.tsx";
 import { Project } from "../components/aboutContents/Project.tsx";
 import { ReadTheMap } from "../components/aboutContents/ReadTheMap.tsx";
+import { Team } from "../components/aboutContents/Team.tsx";
 import { TrustTheMap } from "../components/aboutContents/TrustTheMap.tsx";
 
 const CONTENTS = [
@@ -40,6 +41,13 @@ const CONTENTS = [
     textColor: "light",
     title: "Can you trust this map?",
     component: TrustTheMap,
+  },
+  {
+    id: "team",
+    bgColor: undefined,
+    textColor: "primary",
+    title: "The team behind it",
+    component: Team,
   },
 ] as const;
 const CONTENTS_DICT = keyBy(CONTENTS, "id");
