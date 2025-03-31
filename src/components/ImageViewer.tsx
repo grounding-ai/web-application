@@ -68,6 +68,7 @@ export const ImageViewer: FC<{
       animationTime: 1,
       homeFillsViewer: true,
       constrainDuringPan: true,
+      maxZoomLevel: 100,
     });
     const canvas = document.createElement("CANVAS") as HTMLCanvasElement;
     canvas.classList.add("topics-canvas");
