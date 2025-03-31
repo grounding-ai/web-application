@@ -1,5 +1,5 @@
 import { clamp, max } from "lodash";
-import { MouseTracker, Placement, Point, Point as SeadragonPoint, Viewer } from "openseadragon";
+import { CanvasClickEvent, MouseTracker, Placement, Point, Point as SeadragonPoint, Viewer } from "openseadragon";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { FaRegCircleDot } from "react-icons/fa6";
@@ -24,7 +24,8 @@ export const ImageViewer: FC<{
   points?: Topic[];
   clusters?: Cluster[];
   focus?: Coordinates;
-}> = ({ points, clusters = [], focus }) => {
+  targetLinkOnClickStage?: string | null;
+}> = ({ points, clusters = [], focus, targetLinkOnClickStage }) => {
   const { language } = useAppContext();
   const navigate = useNavigate();
   const [isFullyLoaded, setIsFullyLoaded] = useState(false);
@@ -84,6 +85,22 @@ export const ImageViewer: FC<{
       ctxRef.current = null;
     };
   }, []);
+
+  // Handle clicking stage:
+  useEffect(() => {
+    if (!viewer || !targetLinkOnClickStage) return;
+
+    const handler = (e: CanvasClickEvent) => {
+      if (e.quick) {
+        e.preventDefaultAction = true;
+        navigate(targetLinkOnClickStage);
+      }
+    };
+    viewer.addHandler("canvas-click", handler);
+    return () => {
+      viewer.removeHandler("canvas-click", handler);
+    };
+  }, [navigate, targetLinkOnClickStage, viewer]);
 
   // Handle viewport transitions:
   useEffect(() => {
@@ -202,7 +219,7 @@ export const ImageViewer: FC<{
 
       const dom = document.createElement("DIV") as HTMLDivElement;
       dom.innerHTML = `
-        <a href="#/topic/${topic.id}" class="result font-monospace position-relative rounded rounded-1 d-flex flex-row d-inline-block w-auto h-auto">
+        <a href="#" class="result font-monospace position-relative rounded rounded-1 d-flex flex-row d-inline-block w-auto h-auto">
           <span class="result-number bg-primary text-white px-2 py-1 flex-shrink-0" style="white-space:pre-wrap">${(topic.index + "").padStart(4, " ")}</span>
           <span class="result-label bg-white text-primary flex-grow-1 px-2 py-1 text-truncate text-decoration-none">${topic.label}</span>
         </a>

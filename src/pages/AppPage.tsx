@@ -151,7 +151,12 @@ export const AppPage: FC = () => {
 
       <main>
         <section className="map">
-          <ImageViewer points={mapPoints} clusters={clusters} focus={mapFocus} />
+          <ImageViewer
+            points={mapPoints}
+            clusters={clusters}
+            focus={mapFocus}
+            targetLinkOnClickStage={type === "topic" ? "/map" : null}
+          />
         </section>
 
         <section className="content">
