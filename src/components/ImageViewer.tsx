@@ -217,8 +217,6 @@ export const ImageViewer: FC<{
         new MouseTracker({
           element: dom,
           clickHandler() {
-            const rect = viewer.viewport.imageToViewportRectangle(topic.x, topic.y);
-            viewer.viewport.fitBoundsWithConstraints(rect);
             navigate(`/topic/${topic.id}`);
           },
         }),
@@ -281,6 +279,8 @@ export const ImageViewer: FC<{
     if (focus) {
       const rect = viewer.viewport.imageToViewportRectangle(focus.x, focus.y);
       viewer.viewport.fitBoundsWithConstraints(rect);
+    } else {
+      viewer.viewport.goHome();
     }
   }, [focus, viewer]);
 
