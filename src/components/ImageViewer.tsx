@@ -1,8 +1,9 @@
 import { clamp, max } from "lodash";
-import { Placement, Point, Point as SeadragonPoint, Viewer } from "openseadragon";
+import { MouseTracker, Placement, Point, Point as SeadragonPoint, Viewer } from "openseadragon";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { FaRegCircleDot } from "react-icons/fa6";
+import { useNavigate } from "react-router";
 
 import { useAppContext } from "../core/context.ts";
 import { Cluster, Coordinates, Topic } from "../core/types.ts";
@@ -25,9 +26,11 @@ export const ImageViewer: FC<{
   focus?: Coordinates;
 }> = ({ points, clusters = [], focus }) => {
   const { language } = useAppContext();
+  const navigate = useNavigate();
   const [isFullyLoaded, setIsFullyLoaded] = useState(false);
   const topicOverlaysRef = useRef<Map<string, { dom: HTMLDivElement; topic: Topic }>>(new Map());
   const clusterOverlaysRef = useRef<Map<string, { dom: HTMLDivElement; cluster: Cluster }>>(new Map());
+  const mouseTrackersRef = useRef<Map<string, MouseTracker>>(new Map());
   const [viewer, setViewer] = useState<Viewer | null>(null);
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
 
@@ -189,6 +192,7 @@ export const ImageViewer: FC<{
     if (!viewer) return;
 
     const topicOverlaysCache = topicOverlaysRef.current;
+    const mouseTrackersCache = mouseTrackersRef.current;
 
     // Handle current overlays:
     const currentOverlays = new Set<string>();
@@ -197,20 +201,8 @@ export const ImageViewer: FC<{
       if (topicOverlaysCache.has(topic.id)) return;
 
       const dom = document.createElement("DIV") as HTMLDivElement;
-      dom.addEventListener(
-        "click",
-        (e) => {
-          e.stopPropagation();
-          const rect = viewer.viewport.imageToViewportRectangle(topic.x, topic.y);
-          viewer.viewport.fitBoundsWithConstraints(rect);
-        },
-        true,
-      );
       dom.innerHTML = `
-        <a
-          href="#/topic/${topic.id}"
-          class="result font-monospace position-relative rounded rounded-1 d-flex flex-row d-inline-block w-auto h-auto"
-        >
+        <a href="#/topic/${topic.id}" class="result font-monospace position-relative rounded rounded-1 d-flex flex-row d-inline-block w-auto h-auto">
           <span class="result-number bg-primary text-white px-2 py-1 flex-shrink-0" style="white-space:pre-wrap">${(topic.index + "").padStart(4, " ")}</span>
           <span class="result-label bg-white text-primary flex-grow-1 px-2 py-1 text-truncate text-decoration-none">${topic.label}</span>
         </a>
@@ -220,6 +212,17 @@ export const ImageViewer: FC<{
       if (viewer.viewport.getZoom(true) > MIN_EXPAND_ZOOM) dom.classList.add("expand");
       viewer.addOverlay(dom, new SeadragonPoint(topic.x / width, topic.y / height), Placement.LEFT);
       topicOverlaysCache.set(topic.id, { dom, topic });
+      mouseTrackersCache.set(
+        topic.id,
+        new MouseTracker({
+          element: dom,
+          clickHandler() {
+            const rect = viewer.viewport.imageToViewportRectangle(topic.x, topic.y);
+            viewer.viewport.fitBoundsWithConstraints(rect);
+            navigate(`/topic/${topic.id}`);
+          },
+        }),
+      );
     });
 
     // Remove out-of-bound overlays:
@@ -227,9 +230,10 @@ export const ImageViewer: FC<{
       if (!currentOverlays.has(id)) {
         viewer.removeOverlay(dom);
         topicOverlaysCache.delete(id);
+        mouseTrackersCache.delete(id);
       }
     });
-  }, [pointsToDisplay, isFullyLoaded, viewer]);
+  }, [pointsToDisplay, isFullyLoaded, viewer, navigate]);
 
   // Handle clusters rendering:
   useEffect(() => {
