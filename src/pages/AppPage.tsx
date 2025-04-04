@@ -1,12 +1,12 @@
 import { getAsyncMemoData, useAsyncMemo } from "@ouestware/hooks";
 import cx from "classnames";
-import { DiscussionEmbed } from "disqus-react";
 import { fromPairs } from "lodash";
 import { FC, useEffect, useMemo, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import { LuSearchX } from "react-icons/lu";
 import { useLocation, useParams } from "react-router";
 
+import { FeedbackForm } from "../components/FeedbackForm.tsx";
 import { ImageViewer } from "../components/ImageViewer.tsx";
 import { SearchField } from "../components/SearchField.tsx";
 import { SearchResults } from "../components/SearchResults.tsx";
@@ -20,6 +20,7 @@ import { BOTS_SET, Bot } from "../core/types.ts";
 import { translate } from "../utils/translation.ts";
 
 export const AppPage: FC = () => {
+  const apiBaseURL = import.meta.env.VITE_FUNCTIONS_BASE_URL;
   const { language, topicsDict, search: miniSearch, dataStatus, clusters } = useAppContext();
 
   // URL inputs:
@@ -230,27 +231,28 @@ export const AppPage: FC = () => {
               ) : (
                 <TopicContentComponent topic={topic} />
               )}
-
               <SearchField
                 inputClassName={
                   params.bot === "critic" ? "bg-light-purple border-light-purple" : "bg-light-blue border-light-blue"
                 }
               />
 
-              <hr className="border-1 border-white opacity-100 my-4" />
+              {apiBaseURL && (
+                <>
+                  <hr className={`border-1 border-${textColor} opacity-100 my-4`} />
 
-              <DiscussionEmbed
-                key={params.bot ? `topic/${topic.id}/bot/${params.bot}` : `topic/${topic.id}`}
-                shortname="grounding-ai"
-                config={{
-                  url: window.location.toString().replace("#", ""),
-                  identifier: params.bot ? `topic/${topic.id}/bot/${params.bot}` : `topic/${topic.id}`,
-                  title:
-                    `Topic ${translate(topic.headline, language)}` +
-                    (params.bot ? ` - ${params.bot === "critic" ? "The skeptic bot" : "The advocate bot"}` : ""),
-                  language: language === "en" ? "en_US" : "da_DK",
-                }}
-              />
+                  <FeedbackForm
+                    bgColor={bgColor}
+                    textColor={textColor}
+                    baseURL={apiBaseURL}
+                    basePayload={{
+                      url: location.toString(),
+                      "page type": type === "topic" ? (params.bot ? `bot-${params.bot}` : "topic") : "map",
+                      "topic id": type === "topic" ? params.topicId : undefined,
+                    }}
+                  />
+                </>
+              )}
             </>
           )}
         </section>

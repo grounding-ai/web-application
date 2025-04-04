@@ -1,7 +1,9 @@
+import { ReactNode } from "react";
+
 import { Language, Translation } from "../core/types";
 
-export function translate(translation: Translation, language: Language): string {
-  return translation[language] || translation[getOtherLanguage(language)] || "";
+export function translate<T extends string | ReactNode = string>(translation: Translation<T>, language: Language): T {
+  return translation[language] || translation[getOtherLanguage(language)] || ("" as T);
 }
 
 export function getOtherLanguage(language: Language): Language {

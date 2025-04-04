@@ -19,5 +19,9 @@ Before anything else, you need to properly clone the project (including large fi
 
 At this point:
 
-- You can run the development version of the project: `npm run dev`
-- You can build the project version of the project: `npm run build` (outputs the publishable web app in the `./dist` folder)
+- You can run the development version of the project: `npm run app-dev`
+- You can build the project version of the project: `npm run app-build` (outputs the publishable web app in the `./dist` folder)
+
+### Running the feedback form locally
+
+TODO

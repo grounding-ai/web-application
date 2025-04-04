@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
-    "build": "tsc -b && vite build",
+    "app-dev": "vite --host",
+    "app-build": "tsc -b && vite build",
+    "api-dev": "netlify functions:serve",
     "lint": "eslint .",
     "preview": "vite preview",
     "make-tiles": "rimraf public/map/map.dzi public/map/map_files && vips dzsave resources/map.jpg public/map/map",
@@ -17,9 +18,9 @@
   },
   "dependencies": {
     "@ouestware/hooks": "^0.0.1-alpha.3",
+    "@ouestware/notifications": "^0.0.1-aplha.4",
     "bootstrap": "^5.3.3",
     "classnames": "^2.5.1",
-    "disqus-react": "^1.1.6",
     "lodash": "^4.17.21",
     "lz-string": "^1.5.0",
     "minisearch": "^7.1.1",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@netlify/functions": "^3.0.4",
     "@trivago/prettier-plugin-sort-imports": "^5.2.1",
     "@types/lodash": "^4.17.14",
     "@types/openseadragon": "^3.0.10",
@@ -42,6 +44,8 @@
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",
+    "airtable": "^0.12.2",
+    "dotenv": "^16.4.7",
     "eslint": "^9.17.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.16",
@@ -52,6 +56,7 @@
     "tsx": "^4.19.2",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.18.2",
+    "typology": "^1.3.0",
     "vite": "^6.0.5"
   }
 }

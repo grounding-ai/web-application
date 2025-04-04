@@ -1,0 +1,32 @@
+name: Deploy Netlify Functions
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22"
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Install Netlify
+        run: npm install -g netlify-cli
+
+      - name: Deploy functions to Netlify
+        run: |
+          prod_flag=""
+          if [ "$BRANCH_NAME" = "main" ]; then prod_flag="--prod"; fi
+          netlify deploy \
+            --dir empty \
+            --site ${{ secrets.NETLIFY_SITE_ID }} \
+            --auth ${{ secrets.NETLIFY_API_TOKEN }} \
+            $prod_flag

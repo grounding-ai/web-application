@@ -70,7 +70,9 @@ jobs:
         run: npm run make-indices
 
       - name: Build project
-        run: npm run build
+        env:
+          VITE_FUNCTIONS_BASE_URL: ${{ secrets.VITE_FUNCTIONS_BASE_URL }}
+        run: npm run app-build
 
       - name: Deploy to GitHub Pages
         uses: crazy-max/ghaction-github-pages@v4
