@@ -23,7 +23,7 @@ async function main() {
       id: doc.id,
       title: doc.headline_v2,
       en: doc.text,
-      da: doc.danish_Translation,
+      da: doc.danish_translation,
     }));
 
   const outputFile = path.join(OUTPUT_DIR, `contents.csv`);

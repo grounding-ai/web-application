@@ -35,7 +35,7 @@ async function main() {
       id,
       headline_v2,
       text,
-      danish_Translation,
+      danish_translation,
       critic_bot_english,
       optimist_bot_english,
       critic_bot_danish,
@@ -49,7 +49,7 @@ async function main() {
       },
       content: {
         en: text,
-        da: danish_Translation,
+        da: danish_translation,
       },
       bots: {
         critic: {

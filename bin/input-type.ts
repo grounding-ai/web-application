@@ -2,7 +2,7 @@ export const SUMMARIES_COLUMNS = [
   "id",
   "headline_v2",
   "text",
-  "danish_Translation",
+  "danish_translation",
   "critic_bot_english",
   "optimist_bot_english",
   "critic_bot_danish",
