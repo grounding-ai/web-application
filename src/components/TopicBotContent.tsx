@@ -29,7 +29,11 @@ export const TopicBotContent: FC<{ topic: TopicContent; bot: Bot }> = ({ topic, 
         </div>
         <img
           src={`${import.meta.env.BASE_URL}/${botImg}.png`}
-          alt={bot === "critic" ? "The skeptic bot" : "The advocate bot"}
+          alt={
+            bot === "critic"
+              ? translate({ en: "The skeptic bot", da: "Skeptisk bot" }, language)
+              : translate({ en: "The advocate bot", da: "Positiv bot" }, language)
+          }
           className="img-fluid flex-shrink-0"
           style={{ width: "35%" }}
         />

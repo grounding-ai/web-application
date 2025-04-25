@@ -109,7 +109,7 @@
       margin-top: 2rem;
       margin-left: $aside-width;
       margin-right: 2rem;
-      max-width: calc(max(min(100vw - #{$aside-width} - 250px, 1200px), 700px));
+      max-width: calc(max(min(100vw - #{$aside-width} - 250px, 1000px), 700px));
 
       p {
         line-height: 2em;

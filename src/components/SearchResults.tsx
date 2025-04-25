@@ -1,19 +1,25 @@
 import { capitalize } from "lodash";
 import { FC } from "react";
 
+import { useAppContext } from "../core/context.ts";
 import { Topic } from "../core/types";
+import { translate } from "../utils/translation.ts";
 
 export const SearchResults: FC<{ query: string; results: Topic[] }> = ({ query, results }) => {
+  const { language } = useAppContext();
+
   return (
     <>
       {!results.length ? (
         <h2 className="display-3 mt-5 pt-5">
-          No topics related to: <div className="fw-normal">{capitalize(query)}</div>
+          {translate({ en: "No topics related to", da: "Intet relaterede emner" }, language)}:{" "}
+          <div className="fw-normal">{capitalize(query)}</div>
         </h2>
       ) : (
         <>
           <h2 className="display-2 mb-4">
-            Topics related to: <div className="fw-normal">{capitalize(query)}</div>
+            {translate({ en: "Topics related to", da: "Relaterede emner" }, language)}:{" "}
+            <div className="fw-normal">{capitalize(query)}</div>
           </h2>
 
           {results.map((topic) => (

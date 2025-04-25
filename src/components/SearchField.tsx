@@ -45,7 +45,13 @@ export const SearchField: FC<{
           autoComplete="off"
           className={cx("form-control bg-light-blue fs-5", inputClassName)}
           id="topics-search"
-          placeholder="Eg: 1640, Food"
+          placeholder={translate(
+            {
+              en: "Eg: 1640, Food",
+              da: "Ex: 1640, Mad",
+            },
+            language,
+          )}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -56,7 +62,7 @@ export const SearchField: FC<{
               role="status"
               style={{ top: "28%" }}
             >
-              <span className="visually-hidden">Loading...</span>
+              <span className="visually-hidden">{translate({ en: "Loading...", da: "Indlæsning..." }, language)}</span>
             </div>
           </div>
         )}

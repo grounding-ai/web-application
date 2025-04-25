@@ -1,10 +1,10 @@
-import { ReactNode } from "react";
+import { ComponentType, ReactNode } from "react";
 
 export const LANGUAGES = ["en", "da"] as const;
 export const LANGUAGES_SET = new Set<string>(LANGUAGES);
 export const DEFAULT_LANGUAGE = "en";
 export type Language = (typeof LANGUAGES)[number];
-export type Translation<T extends string | ReactNode = string> = Partial<Record<Language, T | null>>;
+export type Translation<T extends string | ReactNode | ComponentType = string> = Partial<Record<Language, T | null>>;
 export const VOICES_FILTERS: Record<Language, (string | RegExp)[]> = {
   en: ["en-GB", "en", /^en[-_]/],
   da: ["da-DK", "da", /^da[-_]/, /^en[-_]/],

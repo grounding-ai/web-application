@@ -7,47 +7,49 @@ import { Link } from "react-router-dom";
 import { makeLoader, useLoaderData } from "react-router-typesafe";
 
 import { TopMenu } from "../components/TopMenu.tsx";
-import { Methodology } from "../components/aboutContents/Methodology.tsx";
-import { Project } from "../components/aboutContents/Project.tsx";
-import { ReadTheMap } from "../components/aboutContents/ReadTheMap.tsx";
-import { Team } from "../components/aboutContents/Team.tsx";
-import { TrustTheMap } from "../components/aboutContents/TrustTheMap.tsx";
+import { MethodologyDA, MethodologyEN } from "../components/aboutContents/Methodology.tsx";
+import { ProjectDA, ProjectEN } from "../components/aboutContents/Project.tsx";
+import { ReadTheMapDA, ReadTheMapEN } from "../components/aboutContents/ReadTheMap.tsx";
+import { TeamDA, TeamEN } from "../components/aboutContents/Team.tsx";
+import { TrustTheMapDA, TrustTheMapEN } from "../components/aboutContents/TrustTheMap.tsx";
+import { useAppContext } from "../core/context.ts";
+import { translate } from "../utils/translation.ts";
 
 const CONTENTS = [
   {
     id: "project",
     bgColor: undefined,
     textColor: "primary",
-    title: "About the project",
-    component: Project,
+    title: { en: "About the project", da: "Om projektet" },
+    component: { en: ProjectEN, da: ProjectDA },
   },
   {
     id: "methodology",
     bgColor: "secondary",
     textColor: "light",
-    title: "Methodology",
-    component: Methodology,
+    title: { en: "Methodology", da: "Metode" },
+    component: { en: MethodologyEN, da: MethodologyDA },
   },
   {
     id: "read-the-map",
     bgColor: undefined,
     textColor: "primary",
-    title: "How to read the map?",
-    component: ReadTheMap,
+    title: { en: "How to read the map", da: "Hvordan læser man kortet" },
+    component: { en: ReadTheMapEN, da: ReadTheMapDA },
   },
   {
     id: "trust-the-map",
     bgColor: "secondary",
     textColor: "light",
-    title: "Can you trust this map?",
-    component: TrustTheMap,
+    title: { en: "Can you trust this map?", da: "Stoler du på kortet?" },
+    component: { en: TrustTheMapEN, da: TrustTheMapDA },
   },
   {
     id: "team",
     bgColor: undefined,
     textColor: "primary",
-    title: "The team behind it",
-    component: Team,
+    title: { en: "Who we are", da: "Hvem vi er" },
+    component: { en: TeamEN, da: TeamDA },
   },
 ] as const;
 const CONTENTS_DICT = keyBy(CONTENTS, "id");
@@ -60,8 +62,10 @@ export const aboutPageLoader = makeLoader(async ({ params: { contentID } }) => {
 });
 
 export const AboutPage: FC = () => {
+  const { language } = useAppContext();
   const { content } = useLoaderData<typeof aboutPageLoader>();
   const navigate = useNavigate();
+  const Component = translate(content.component, language);
 
   useEffect(() => {
     window.scrollTo({
@@ -96,7 +100,7 @@ export const AboutPage: FC = () => {
           >
             {CONTENTS.map(({ id, title }) => (
               <option key={id} value={id}>
-                {title.toUpperCase()}
+                {translate(title, language).toUpperCase()}
               </option>
             ))}
           </select>
@@ -110,9 +114,9 @@ export const AboutPage: FC = () => {
           {CONTENTS.map(({ id, title }) => (
             <li key={id} className={cx(id === content.id && "active")}>
               {id === content.id ? (
-                <strong className="active">{title.toUpperCase()}</strong>
+                <strong className="active">{translate(title, language).toUpperCase()}</strong>
               ) : (
-                <Link to={`/about/${id}`}>{title.toUpperCase()}</Link>
+                <Link to={`/about/${id}`}>{translate(title, language).toUpperCase()}</Link>
               )}
             </li>
           ))}
@@ -120,7 +124,7 @@ export const AboutPage: FC = () => {
       </aside>
 
       <main>
-        <content.component />
+        <Component />
       </main>
     </div>
   );

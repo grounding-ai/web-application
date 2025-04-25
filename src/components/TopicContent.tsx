@@ -28,7 +28,15 @@ export const TopicContentComponent: FC<{ topic: TopicContent }> = ({ topic }) =>
 
       <hr className="border-1 border-white opacity-100" />
 
-      <h2 className="fw-bolder">Get some synthetic opinions on this topic</h2>
+      <h2 className="fw-bolder">
+        {translate(
+          {
+            en: "Get some synthetic opinions on this topic",
+            da: "Hør nogle syntetiske holdninger til emnet",
+          },
+          language,
+        )}
+      </h2>
 
       <section className="d-flex flex-row justify-content-between my-4">
         <a
@@ -36,10 +44,12 @@ export const TopicContentComponent: FC<{ topic: TopicContent }> = ({ topic }) =>
           className="border-0 bg-light-blue text-primary rounded me-3 text-decoration-none overflow-hidden"
           style={{ aspectRatio: 1 }}
         >
-          <div className="text-uppercase font-monospace text-center fw-bolder m-2">The skeptic bot</div>
+          <div className="text-uppercase font-monospace text-center fw-bolder m-2">
+            {translate({ en: "The skeptic bot", da: "Skeptisk bot" }, language)}
+          </div>
           <img
             src={`${import.meta.env.BASE_URL}/bot-skeptic.png`}
-            alt="The skeptic bot"
+            alt={translate({ en: "The skeptic bot", da: "Skeptisk bot" }, language)}
             className="img-fluid w-100"
             style={{ transform: "scale(-1,1)" }}
           />
@@ -49,10 +59,12 @@ export const TopicContentComponent: FC<{ topic: TopicContent }> = ({ topic }) =>
           className="border-0 bg-primary text-light-blue rounded text-decoration-none overflow-hidden"
           style={{ aspectRatio: 1 }}
         >
-          <div className="text-uppercase font-monospace text-center fw-bolder m-2">The advocate bot</div>
+          <div className="text-uppercase font-monospace text-center fw-bolder m-2">
+            {translate({ en: "The advocate bot", da: "Positiv bot" }, language)}
+          </div>
           <img
             src={`${import.meta.env.BASE_URL}/bot-advocate.png`}
-            alt="The advocate bot"
+            alt={translate({ en: "The advocate bot", da: "Positiv bot" }, language)}
             className="img-fluid w-100"
           />
         </a>
