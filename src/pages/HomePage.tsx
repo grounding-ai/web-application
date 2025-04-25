@@ -21,7 +21,7 @@ export const HomePage: FC = () => {
             {translate(
               {
                 en: "Exploring the role of algorithms in science",
-                da: "Udforskning af algoritmers rolle inden for videnskaben",
+                da: "Hvad laver algoritmerne i videnskaben?",
               },
               language,
             )}

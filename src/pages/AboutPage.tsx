@@ -83,7 +83,7 @@ export const AboutPage: FC = () => {
       )}
     >
       <header>
-        <TopMenu colorClassNameSuffix={content.textColor}>
+        <TopMenu current="about" colorClassNameSuffix={content.textColor}>
           <h1 className="fs-5 mt-1">Grounding AI</h1>
         </TopMenu>
       </header>

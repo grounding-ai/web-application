@@ -8,8 +8,9 @@ import { useAppContext } from "../core/context.ts";
 import { translate } from "../utils/translation.ts";
 import LanguageSelect from "./LanguageSelect.tsx";
 
-export const TopMenu: FC<PropsWithChildren<{ colorClassNameSuffix: string }>> = ({
+export const TopMenu: FC<PropsWithChildren<{ colorClassNameSuffix: string; current: "app" | "about" }>> = ({
   children,
+  current,
   colorClassNameSuffix,
 }) => {
   const { language } = useAppContext();
@@ -25,14 +26,19 @@ export const TopMenu: FC<PropsWithChildren<{ colorClassNameSuffix: string }>> = 
             selectClassName={`border-${colorClassNameSuffix} text-${colorClassNameSuffix}`}
           />
           <Link
-            to="/about/project"
+            to={current === "app" ? "/about/project" : "/map"}
             className={`btn btn-sm btn-outline-${colorClassNameSuffix} d-inline-block align-baseline font-monospace text-uppercase me-2`}
           >
             {translate(
-              {
-                en: "About",
-                da: "Om",
-              },
+              current === "app"
+                ? {
+                    en: "About",
+                    da: "Om",
+                  }
+                : {
+                    en: "Map",
+                    da: "Kortet",
+                  },
               language,
             )}
           </Link>

@@ -116,6 +116,14 @@
       inset: 0;
     }
 
+    .map-caption {
+      .square {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+      }
+    }
+
     .content {
       width: $desktop-content-width;
       background: $secondary;

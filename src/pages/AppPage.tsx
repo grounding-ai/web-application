@@ -19,6 +19,15 @@ import { useAppContext } from "../core/context.ts";
 import { BOTS_SET, Bot } from "../core/types.ts";
 import { translate } from "../utils/translation.ts";
 
+const MAP_CAPTION = [
+  { color: "#B46059", label: "1980-1990" },
+  { color: "#2BB677", label: "2010-2015" },
+  { color: "#BF972E", label: "1990-2000" },
+  { color: "#00A3C6", label: "2015-2020" },
+  { color: "#81A73F", label: "2000-2010" },
+  { color: "#372995", label: "2020-2025" },
+];
+
 export const AppPage: FC = () => {
   const apiBaseURL = import.meta.env.VITE_FUNCTIONS_BASE_URL;
   const { language, topicsDict, search: miniSearch, dataStatus, clusters } = useAppContext();
@@ -139,7 +148,7 @@ export const AppPage: FC = () => {
       )}
     >
       <header>
-        <TopMenu colorClassNameSuffix={textColor}>
+        <TopMenu current="app" colorClassNameSuffix={textColor}>
           {type === "search" ? (
             <h1 className="fs-5 mt-1">Grounding AI</h1>
           ) : (
@@ -169,14 +178,54 @@ export const AppPage: FC = () => {
                   <SearchResults query={params.search} results={results} />
                 </div>
               ) : (
-                <div className="search-help fs-2 fw-bold">
-                  {translate(
-                    {
-                      en: "Zoom in and out to explore topics",
-                      da: "Zoom ind og ud for at udforske emner",
-                    },
-                    language,
-                  )}
+                <div className="search-help d-flex flex-column">
+                  <h2 className="fw-bold flex-grow-1">
+                    {translate(
+                      {
+                        en: (
+                          <>
+                            Zoom in and out <br />
+                            to explore topics
+                          </>
+                        ),
+                        da: (
+                          <>
+                            Zoom ind og ud for <br />
+                            at udforske emner
+                          </>
+                        ),
+                      },
+                      language,
+                    )}
+                  </h2>
+                  <hr className={`border-1 border-${textColor} opacity-100 my-4`} />
+                  <div className="me-5 pe-5 mb-5">
+                    <h3 className="fs-3 fw-bold">
+                      {translate(
+                        {
+                          en: "How to read the map",
+                          da: "Hvordan læser man kortet",
+                        },
+                        language,
+                      )}
+                    </h3>
+                    <p className="text-uppercase font-monospace small">
+                      {translate(
+                        {
+                          en: "Each dot represents a scientific paper, labels indicate groups of papers. The color shows the publication year.",
+                          da: "Hver prik repræsenterer en videnskabelig artikel, og etiketterne angiver grupper af artikler. Farven viser udgivelsesåret.",
+                        },
+                        language,
+                      )}
+                    </p>
+                    <div className="map-caption row mt-5">
+                      {MAP_CAPTION.map(({ color, label }) => (
+                        <div className="col-6 d-flex flex-row align-items-center mb-4 text-uppercase font-monospace small">
+                          <span className="square me-3" style={{ background: color }} /> <span>{label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               )}
 
@@ -231,16 +280,12 @@ export const AppPage: FC = () => {
               ) : (
                 <TopicContentComponent topic={topic} />
               )}
-              <SearchField
-                inputClassName={
-                  params.bot === "critic" ? "bg-light-purple border-light-purple" : "bg-light-blue border-light-blue"
-                }
-              />
 
               {apiBaseURL && (
                 <>
-                  <hr className={`border-1 border-${textColor} opacity-100 my-4`} />
-
+                  <div>
+                    <hr className={`border-1 border-${textColor} opacity-100 my-4`} />
+                  </div>
                   <FeedbackForm
                     bgColor={bgColor}
                     textColor={textColor}
@@ -253,6 +298,18 @@ export const AppPage: FC = () => {
                   />
                 </>
               )}
+
+              <div>
+                <hr className={`border-1 border-${textColor} opacity-100 my-4`} />
+              </div>
+
+              <div className="mb-5">
+                <SearchField
+                  inputClassName={
+                    params.bot === "critic" ? "bg-light-purple border-light-purple" : "bg-light-blue border-light-blue"
+                  }
+                />
+              </div>
             </>
           )}
         </section>
